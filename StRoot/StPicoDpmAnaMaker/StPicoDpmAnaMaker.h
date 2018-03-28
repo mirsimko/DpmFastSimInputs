@@ -78,7 +78,7 @@
  *  Initial Authors:  
  *            Xin Dong        (xdong@lbl.gov)
  *            Mustafa Mustafa (mmustafa@lbl.gov)
- *          **Jochen Thaeder  (jmthader@lbl.gov) 
+ *            Jochen Thaeder  (jmthader@lbl.gov) 
  * 
  *  ** Code Maintainer
  *
@@ -99,11 +99,11 @@ class StRefMultCorr;
 
 class StPicoDpmAnaMaker : public StPicoHFMaker 
 {
- public:
+public:
   StPicoDpmAnaMaker(char const* name, StPicoDstMaker* picoMaker, char const* outputBaseFileName,  
-		       char const* inputHFListHFtree);
+		    char const* inputHFListHFtree);
   virtual ~StPicoDpmAnaMaker();
-  
+
   virtual Int_t InitHF();
   virtual Int_t MakeHF();
   virtual void  ClearHF(Option_t *opt);
@@ -112,7 +112,7 @@ class StPicoDpmAnaMaker : public StPicoHFMaker
   virtual bool isCloseTracks(StPicoTrack const*, StPicoTrack const*,StThreeVectorF const & , float) const;
   virtual double DCA(StPicoTrack const*, StThreeVectorF const &) const;
   int createQA();
-  
+
   // -- ADOPT DECAY CHANNELS, if wished ------------------- 
   void setDecayChannel(unsigned int u) { mDecayChannel = u; }
 
@@ -121,27 +121,27 @@ class StPicoDpmAnaMaker : public StPicoHFMaker
   void setRefMutCorr(StRefMultCorr* gRefMultCorr) { mRefmultCorrUtil = gRefMultCorr; }
   StRefMultCorr* getRefMultCorr() { return mRefmultCorrUtil; }
 
- //  float getTofBeta(StPicoTrack const*,StThreeVectorF const& vtx) const;
+  //  float getTofBeta(StPicoTrack const*,StThreeVectorF const& vtx) const;
 
-   void histoInit(TString fileBaseName,bool fillQaHists=true);
-   void addTpcDenom1(bool IsPion, bool IsKaon, bool IsProton, float pt, int centrality, float Eta, float Phi, float Vz);
-   void addHFTNumer1(bool IsPion, bool IsKaon, bool IsProton, float pt, int centrality, float Eta, float Phi, float Vz);
-   void addDcaPtCent(float dca, float dcaXy, float  dcaZ, bool IsPion, bool IsKaon, bool IsProton, float pt,  int centrality, float Eta, float Phi, float Vz);
-   int getEtaIndexDca(float Eta) ;
-   int getPhiIndexDca(float Phi) ;
-   int getVzIndexDca(float Vz) ;
-   int getEtaIndexRatio(float Eta) ;
-   int getPhiIndexRatio(float Phi) ;
-   int getVzIndexRatio(float Vz) ;
-   void addCent(const double refmultCor, int centrality, const double reweight, const float vz);
-   void closeFile();
+  void histoInit(TString fileBaseName,bool fillQaHists=true);
+  void addTpcDenom1(bool IsPion, bool IsKaon, bool IsProton, float pt, int centrality, float Eta, float Phi, float Vz);
+  void addHFTNumer1(bool IsPion, bool IsKaon, bool IsProton, float pt, int centrality, float Eta, float Phi, float Vz);
+  void addDcaPtCent(float dca, float dcaXy, float  dcaZ, bool IsPion, bool IsKaon, bool IsProton, float pt,  int centrality, float Eta, float Phi, float Vz);
+  int getEtaIndexDca(float Eta) ;
+  int getPhiIndexDca(float Phi) ;
+  int getVzIndexDca(float Vz) ;
+  int getEtaIndexRatio(float Eta) ;
+  int getPhiIndexRatio(float Phi) ;
+  int getVzIndexRatio(float Vz) ;
+  void addCent(const double refmultCor, int centrality, const double reweight, const float vz);
+  void closeFile();
 
- // virtual float getEta(int index){return m_EtaEdgeDca[index];};
+  // virtual float getEta(int index){return m_EtaEdgeDca[index];};
 
 
- //  ClassDef(StPicoDpmAnaMaker, 1)
+  //  ClassDef(StPicoDpmAnaMaker, 1)
 
- protected:
+protected:
   virtual bool isHadron(StPicoTrack const*, int pidFlag) const;
   virtual bool isPion(StPicoTrack const*) const;
   virtual bool isKaon(StPicoTrack const*) const;
@@ -159,110 +159,110 @@ private:
 
 
   // -- ADD USER MEMBERS HERE ------------------- 
-   //TNtuple *ntp_DMeson; //orig. Kvapil
-   TTree *ntp_Dmeson; //Vanek
+  //TNtuple *ntp_DMeson; //orig. Kvapil
+  TTree *ntp_Dmeson; //Vanek
 
-   StRefMultCorr* mRefmultCorrUtil;
-   int mRunNumber;
-       
-TString mOutFileBaseName;
+  StRefMultCorr* mRefmultCorrUtil;
+  int mRunNumber;
+
+  TString mOutFileBaseName;
 
   bool mFillQaHists;
-   TFile* mOutFile;
+  TFile* mOutFile;
 
-   //Cuts----------------------------
-   static const int m_nParticles = 3;
-   //TString m_ParticleName[m_nParticles];
+  //Cuts----------------------------
+  static const int m_nParticles = 3;
+  //TString m_ParticleName[m_nParticles];
 
-   static const int m_nEtasDca = 5;
+  static const int m_nEtasDca = 5;
   // float m_EtaEdgeDca[m_nEtasDca+1];
-   static const int m_nPhisDca = 11;
-   //static float m_PhiEdgeDca[m_nPhisDca + 1];
+  static const int m_nPhisDca = 11;
+  //static float m_PhiEdgeDca[m_nPhisDca + 1];
 
-   static const int m_nVzsDca = 4;
-   //static float m_VzEdgeDca[m_nVzsDca + 1];
+  static const int m_nVzsDca = 4;
+  //static float m_VzEdgeDca[m_nVzsDca + 1];
 
-   static const int m_nCentsDca = 9;
-   //static float m_CentEdgeDca[m_nCentsDca + 1];
+  static const int m_nCentsDca = 9;
+  //static float m_CentEdgeDca[m_nCentsDca + 1];
 
-   static const int m_nPtsDca = 19;
+  static const int m_nPtsDca = 19;
   // static float m_PtEdgeDca[m_nPtsDca + 1];
 
-   static const int m_nEtasRatio = 10;
+  static const int m_nEtasRatio = 10;
   // static float m_EtaEdgeRatio[m_nEtasRatio + 1];
 
-   static const int m_nPhisRatio = 11;
-   //static float m_PhiEdgeRatio[m_nPhisRatio + 1];
+  static const int m_nPhisRatio = 11;
+  //static float m_PhiEdgeRatio[m_nPhisRatio + 1];
 
-   static const int m_nVzsRatio = 6;
-   //static float m_VzEdgeRatio[m_nVzsRatio + 1];
+  static const int m_nVzsRatio = 6;
+  //static float m_VzEdgeRatio[m_nVzsRatio + 1];
 
-   static const int m_nCentsRatio = 10;
+  static const int m_nCentsRatio = 10;
   // static float m_CentEdgeRatio[m_nCentsRatio + 1];
 
-   static const int m_nPtsRatio = 36;
+  static const int m_nPtsRatio = 36;
   // static float m_PtEdgeRatio[m_nPtsRatio + 1];
 
   static const int m_nDcasDca = 144;
- // static float m_DcaEdgeDca[m_nDcasDca + 1];
-   //-----------------------------------
+  // static float m_DcaEdgeDca[m_nDcasDca + 1];
+  //-----------------------------------
 
-   TH1F* mh1Cent;
-   TH1F* mh1CentWg;
-   TH1F* mh1gRefmultCor;
-   TH1F* mh1gRefmultCorWg;
-   TH2F* mh2CentVz;
-   TH2F* mh2CentVzWg;
+  TH1F* mh1Cent;
+  TH1F* mh1CentWg;
+  TH1F* mh1gRefmultCor;
+  TH1F* mh1gRefmultCorWg;
+  TH2F* mh2CentVz;
+  TH2F* mh2CentVzWg;
 
 
-   //HFT ratio QA
-   TH2F* mh2Tpc1PtCent;
-   TH2F* mh2Tpc1PhiVz;
-   TH2F* mh2HFT1PtCent;
-   TH2F* mh2HFT1PhiVz;
-   TH2F* mh2Tpc1PtCentPartEtaVzPhi[m_nParticles][m_nEtasRatio][m_nVzsRatio][m_nPhisRatio];
-   TH2F* mh2HFT1PtCentPartEtaVzPhi[m_nParticles][m_nEtasRatio][m_nVzsRatio][m_nPhisRatio];
+  //HFT ratio QA
+  TH2F* mh2Tpc1PtCent;
+  TH2F* mh2Tpc1PhiVz;
+  TH2F* mh2HFT1PtCent;
+  TH2F* mh2HFT1PhiVz;
+  TH2F* mh2Tpc1PtCentPartEtaVzPhi[m_nParticles][m_nEtasRatio][m_nVzsRatio][m_nPhisRatio];
+  TH2F* mh2HFT1PtCentPartEtaVzPhi[m_nParticles][m_nEtasRatio][m_nVzsRatio][m_nPhisRatio];
 
-   //HFT Dca
-   TH3F* mh3DcaXyZPtCentPartEtaVzPhi[m_nParticles][m_nEtasDca][m_nVzsDca][m_nCentsDca];
+  //HFT Dca
+  TH3F* mh3DcaXyZPtCentPartEtaVzPhi[m_nParticles][m_nEtasDca][m_nVzsDca][m_nCentsDca];
 
-   TH3F* mh3DcaPtCent;
-   TH3F* mh3DcaXyPtCent;
-   TH3F* mh3DcaZPtCent;
+  TH3F* mh3DcaPtCent;
+  TH3F* mh3DcaXyPtCent;
+  TH3F* mh3DcaZPtCent;
 
-//---Variables for TTree---------------------------
-	//Pion1
-	Int_t pi1_runId, pi1_eventId;
-	Float_t pi1_phi, pi1_eta, pi1_pt, pi1_dca, pi1_dedx, pi1_nSigma;
-	Int_t pi1_nHitFit, pi1_nHitdedx;
-	Float_t pi1_TOFinvbeta, pi1_betaBase;
+  //---Variables for TTree---------------------------
+  //Pion1
+  Int_t pi1_runId, pi1_eventId;
+  Float_t pi1_phi, pi1_eta, pi1_pt, pi1_dca, pi1_dedx, pi1_nSigma;
+  Int_t pi1_nHitFit, pi1_nHitdedx;
+  Float_t pi1_TOFinvbeta, pi1_betaBase;
 
-	//Pion2
-	Int_t pi2_runId, pi2_eventId;
-	Float_t pi2_phi, pi2_eta, pi2_pt, pi2_dca, pi2_dedx, pi2_nSigma;
-	Int_t pi2_nHitFit, pi2_nHitdedx;
-	Float_t pi2_TOFinvbeta, pi2_betaBase;
+  //Pion2
+  Int_t pi2_runId, pi2_eventId;
+  Float_t pi2_phi, pi2_eta, pi2_pt, pi2_dca, pi2_dedx, pi2_nSigma;
+  Int_t pi2_nHitFit, pi2_nHitdedx;
+  Float_t pi2_TOFinvbeta, pi2_betaBase;
 
-	//Kaon
-	Int_t k_runId, k_eventId;
-	Float_t k_phi, k_eta, k_pt, k_dca, k_dedx, k_nSigma;
-	Int_t k_nHitFit, k_nHitdedx;
-	Float_t k_TOFinvbeta, k_betaBase;
+  //Kaon
+  Int_t k_runId, k_eventId;
+  Float_t k_phi, k_eta, k_pt, k_dca, k_dedx, k_nSigma;
+  Int_t k_nHitFit, k_nHitdedx;
+  Float_t k_TOFinvbeta, k_betaBase;
 
-	//dca, flag, prim. vertex
-	Float_t mdcaMax;
-	Int_t flag;
-	Float_t primVz;
+  //dca, flag, prim. vertex
+  Float_t mdcaMax;
+  Int_t flag;
+  Float_t primVz;
 
-	//D meson
-	Float_t D_theta, D_decayL, D_phi, D_eta, D_pt, D_mass, D_dV0Max;
+  //D meson
+  Float_t D_theta, D_decayL, D_phi, D_eta, D_pt, D_mass, D_dV0Max;
 
-	//centrality, refMult
-	Float_t mcentrality, refmult, mrefmultcorr, mreweight;
+  //centrality, refMult
+  Float_t mcentrality, refmult, mrefmultcorr, mreweight;
 
-	
 
-//-------------------------------------------------
+
+  //-------------------------------------------------
   // -- ADD USER MEMBERS HERE -------------------
 
   ClassDef(StPicoDpmAnaMaker, 1) //set to 1
