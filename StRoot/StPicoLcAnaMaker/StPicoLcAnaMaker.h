@@ -1,5 +1,5 @@
-#ifndef StPicoDpmAnaMaker_h
-#define StPicoDpmAnaMaker_h
+#ifndef StPicoLcAnaMaker_h
+#define StPicoLcAnaMaker_h
 
 #include "StPicoHFMaker/StPicoHFMaker.h"
 #include "TNtuple.h"
@@ -97,12 +97,12 @@ class StHFCuts;
 
 class StRefMultCorr;
 
-class StPicoDpmAnaMaker : public StPicoHFMaker 
+class StPicoLcAnaMaker : public StPicoHFMaker 
 {
 public:
-  StPicoDpmAnaMaker(char const* name, StPicoDstMaker* picoMaker, char const* outputBaseFileName,  
+  StPicoLcAnaMaker(char const* name, StPicoDstMaker* picoMaker, char const* outputBaseFileName,  
 		    char const* inputHFListHFtree);
-  virtual ~StPicoDpmAnaMaker();
+  virtual ~StPicoLcAnaMaker();
 
   virtual Int_t InitHF();
   virtual Int_t MakeHF();
@@ -139,7 +139,7 @@ public:
   // virtual float getEta(int index){return m_EtaEdgeDca[index];};
 
 
-  //  ClassDef(StPicoDpmAnaMaker, 1)
+  //  ClassDef(StPicoLcAnaMaker, 1)
 
 protected:
   virtual bool isHadron(StPicoTrack const*, int pidFlag) const;
@@ -265,7 +265,7 @@ private:
   //-------------------------------------------------
   // -- ADD USER MEMBERS HERE -------------------
 
-  ClassDef(StPicoDpmAnaMaker, 1) //set to 1
+  ClassDef(StPicoLcAnaMaker, 1) //set to 1
 };
 
 #endif

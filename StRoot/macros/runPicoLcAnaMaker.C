@@ -48,7 +48,7 @@
 #include <ctime>
 #include <cstdio>
 
-#include "StPicoDpmAnaMaker/StPicoDpmAnaMaker.h" //kvapil
+#include "StPicoLcAnaMaker/StPicoLcAnaMaker.h" //kvapil
 
 #include "StRefMultCorr/StRefMultCorr.h"
 #include "StRefMultCorr/CentralityMaker.h"
@@ -61,11 +61,11 @@ class StChain;
 
 StChain *chain;
 
-void runPicoDpmAnaMaker(const Char_t *inputFile="test.list", const Char_t *outputFile="outputBaseName",
-			 const unsigned int makerMode = 0 /*kAnalyze*/,
-			 const Char_t *badRunListFileName = "picoList_bad_MB.list", const Char_t *treeName = "picoHFtree",
-			 const Char_t *productionBasePath = "/star/data100/reco/AuAu_200_production_2016/ReversedFullField/P16ij/2016",
-			 const unsigned int decayChannel = 0 /* kChannel0 */) {
+void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *outputFile="outputBaseName",
+		       const unsigned int makerMode = 0 /*kAnalyze*/,
+		       const Char_t *badRunListFileName = "picoList_bad_MB.list", const Char_t *treeName = "picoHFtree",
+		       const Char_t *productionBasePath = "/star/data100/reco/AuAu_200_production_2016/ReversedFullField/P16ij/2016",
+		       const unsigned int decayChannel = 0 /* kChannel0 */) {
   // -- Check STAR Library. Please set SL_version to the original star library used in the production
   //    from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
   string SL_version = "SL16j"; //new: SL16d -> SL16j
@@ -136,14 +136,14 @@ void runPicoDpmAnaMaker(const Char_t *inputFile="test.list", const Char_t *outpu
 
   StPicoDstMaker* picoDstMaker = new StPicoDstMaker(StPicoDstMaker::IoRead, sInputFile, "picoDstMaker"); //SL16j: See StRoot/StPicoDstMaker/StpicodstMaker.h: 28: enum PicoIoMode {IoWrite=1, IoRead=2};
 //  StPicoDstMaker* picoDstMaker = new StPicoDstMaker(2, sInputFile, "picoDstMaker"); //for local testing only
-  StPicoDpmAnaMaker* picoDpmAnaMaker = new StPicoDpmAnaMaker("picoDpmAnaMaker", picoDstMaker, outputFile, sInputListHF);
-  picoDpmAnaMaker->setMakerMode(makerMode);
-  picoDpmAnaMaker->setDecayChannel(StPicoDpmAnaMaker::kChannel1);//kvapil
-  picoDpmAnaMaker->setTreeName(treeName);
-  //picoDpmAnaMaker->setMcMode(mcMode); commented kvapil
+  StPicoLcAnaMaker* picoLcAnaMaker = new StPicoLcAnaMaker("picoLcAnaMaker", picoDstMaker, outputFile, sInputListHF);
+  picoLcAnaMaker->setMakerMode(makerMode);
+  picoLcAnaMaker->setDecayChannel(StPicoLcAnaMaker::kChannel1);//kvapil
+  picoLcAnaMaker->setTreeName(treeName);
+  //picoLcAnaMaker->setMcMode(mcMode); commented kvapil
 
   StHFCuts* hfCuts = new StHFCuts("hfBaseCuts");
-  picoDpmAnaMaker->setHFBaseCuts(hfCuts);
+  picoLcAnaMaker->setHFBaseCuts(hfCuts);
 
   // ---------------------------------------------------
   // -- Set Base cuts for HF analysis
@@ -180,7 +180,7 @@ void runPicoDpmAnaMaker(const Char_t *inputFile="test.list", const Char_t *outpu
 	hfCuts->setCutNHitsFitMinHist(20); //for histograms, Vanek
   hfCuts->setCutRequireHFT(true);
 
-	hfCuts->setCutDca(1.5); //for QA, see createQA() in StPicoDpmAnaMaker.cxx
+	hfCuts->setCutDca(1.5); //for QA, see createQA() in StPicoLcAnaMaker.cxx
 	hfCuts->setCutDcaXy(1.); //used in Kvapil's version, not used in Vanek's version
 	hfCuts->setCutDcaZ(1.);
 
@@ -194,7 +194,7 @@ void runPicoDpmAnaMaker(const Char_t *inputFile="test.list", const Char_t *outpu
 
   // -- Channel0
   //picoHFMyAnaMaker->setDecayMode(StPicoHFEvent::kTwoParticleDecay);
-  picoDpmAnaMaker->setDecayMode(StPicoHFEvent::kThreeParticleDecay); //kvapil
+  picoLcAnaMaker->setDecayMode(StPicoHFEvent::kThreeParticleDecay); //kvapil
 
   // -- ADD USER CUTS HERE ----------------------------
 
@@ -227,7 +227,7 @@ void runPicoDpmAnaMaker(const Char_t *inputFile="test.list", const Char_t *outpu
   hfCuts->setCutPtRange(0.3,50.0,StHFCuts::kPion); //used in candidates analysis
   hfCuts->setCutPtRange(0.3,50.0,StHFCuts::kKaon); //changed to 0.3
 
-	hfCuts->setCutPtQA(0.3); //p_T used in createQA() in StPicoDpmAnaMaker.cxx
+	hfCuts->setCutPtQA(0.3); //p_T used in createQA() in StPicoLcAnaMaker.cxx
   //TPC setters
   hfCuts->setCutTPCNSigmaPion(1.0); //possibly close as possible, e.g. 1.0
   hfCuts->setCutTPCNSigmaKaon(1.0); //all changed to 1.0
@@ -244,7 +244,7 @@ void runPicoDpmAnaMaker(const Char_t *inputFile="test.list", const Char_t *outpu
   // set refmultCorr
 //  cout<<"test"<<endl;
   StRefMultCorr* grefmultCorrUtil = CentralityMaker::instance()->getgRefMultCorr_P16id(); //new StRefMultCorr, info about Run16, SL16j in the same file as for Run14, SL16d
-  picoDpmAnaMaker->setRefMutCorr(grefmultCorrUtil);
+  picoLcAnaMaker->setRefMutCorr(grefmultCorrUtil);
   //cout<<"test2"<<endl;
   // ========================================================================================
 
