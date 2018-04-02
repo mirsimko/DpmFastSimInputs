@@ -8,7 +8,7 @@ using namespace std;
 
 // _________________________________________________________
 StPicoLcAnaMaker::StPicoLcAnaMaker(char const* name, StPicoDstMaker* picoMaker, char const* outputBaseFileName,
-				     char const* inputHFListHFtree = "") :
+				   char const* inputHFListHFtree = "") :
   StPicoHFMaker(name, picoMaker, outputBaseFileName, inputHFListHFtree),
   mDecayChannel(kChannel1), mRefmultCorrUtil(NULL),mOutFileBaseName(outputBaseFileName){
 
@@ -114,7 +114,7 @@ int StPicoLcAnaMaker::createQA(){
     if (!(mHFCuts->hasGoodPtQA(trk))) continue;
     if (!(mHFCuts->hasGoodNHitsFitMinHist(trk))) continue;
     if (!(mHFCuts->hasGoodNHitsFitnHitsMax(trk))) continue; //nHitsFit/nHitsMax
-    if (!(mHFCuts->hasGoodEta(momentum))) continue;
+    if (!(mHFCuts->isInsideEtaRange(trk, StPicoCutsBase::kPion))) continue;
 
     StThreeVectorF dcaPoint = helix.at(helix.pathLength(mPrimVtx.x(), mPrimVtx.y()));
     float dcaZ = dcaPoint.z() - mPrimVtx.z();
@@ -173,7 +173,7 @@ int StPicoLcAnaMaker::createCandidates() {
 	// -- Kaon selection
 	// -- TOF
 	//if( !mHFCuts->isHybridTOFHadron(kaon, mHFCuts->getTofBetaBase(kaon), StHFCuts::kKaon) ) continue; //SL16d
-	if( !mHFCuts->isHybridTOFHadron(kaon, mHFCuts->getTofBetaBase(kaon, mPicoDst->event()->bField()), StHFCuts::kKaon) ) continue; //SL16j, Vanek
+	if ( !mHFCuts->isHybridTOFHadron(kaon, mHFCuts->getTofBetaBase(kaon), StHFCuts::kKaon, mPrimVtx) ) continue; //SL16j, Vanek
 	if (mIdxPicoKaons[idxKaon] == mIdxPicoPions[idxPion1]|| mIdxPicoKaons[idxKaon] == mIdxPicoPions[idxPion2] || mIdxPicoPions[idxPion1] == mIdxPicoPions[idxPion2]) continue;
 	if ( !isCloseTracks(pion1,kaon,mPrimVtx, mBField)) continue;
 	if ( !isCloseTracks(kaon,pion2,mPrimVtx, mBField)) continue;
@@ -235,9 +235,9 @@ int StPicoLcAnaMaker::analyzeCandidates() {
 	pion1BetaBase = mHFCuts->getTofBetaBase(pion1);
 	pion2BetaBase = mHFCuts->getTofBetaBase(pion2);
 	*/
-      kaonBetaBase = mHFCuts->getTofBetaBase(kaon, mPicoDst->event()->bField()); //SL16j, Vanek
-      pion1BetaBase = mHFCuts->getTofBetaBase(pion1, mPicoDst->event()->bField());
-      pion2BetaBase = mHFCuts->getTofBetaBase(pion2, mPicoDst->event()->bField());
+      kaonBetaBase = mHFCuts->getTofBetaBase(kaon); //SL16j, Vanek
+      pion1BetaBase = mHFCuts->getTofBetaBase(pion1);
+      pion2BetaBase = mHFCuts->getTofBetaBase(pion2);
 
     /* orig. Kvapil
        float kaonTOFinvbeta = fabs(1. / mHFCuts->getTofBetaBase(kaon) - sqrt(1+M_KAON_PLUS*M_KAON_PLUS/(kaon->gMom(mPrimVtx,mBField).mag()*kaon->gMom(mPrimVtx,mBField).mag())));
@@ -282,7 +282,7 @@ bool StPicoLcAnaMaker::isPion(StPicoTrack const * const trk) const {
   StThreeVectorF t = trk->pMom();
   if (fabs(t.pseudoRapidity()) > 1.) return false; //pridano fabs 1212
   //if (!mHFCuts->isHybridTOFHadron(trk, mHFCuts->getTofBetaBase(trk), StHFCuts::kPion) ) return false; //SL16d
-  if (!mHFCuts->isHybridTOFHadron(trk, mHFCuts->getTofBetaBase(trk, mPicoDst->event()->bField()), StHFCuts::kPion) ) return false; //SL16j, Vanek
+  if (!mHFCuts->isHybridTOFHadron(trk, mHFCuts->getTofBetaBase(trk), StHFCuts::kPion, mPrimVtx) ) return false; //SL16j, Vanek
   if (!mHFCuts->cutMinDcaToPrimVertex(trk, StPicoCutsBase::kPion)) return false;
   return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCHadron(trk, StPicoCutsBase::kPion));
 }
@@ -292,8 +292,8 @@ bool StPicoLcAnaMaker::isKaon(StPicoTrack const * const trk) const {
   // -- good kaon
   StThreeVectorF t = trk->pMom();
   if (fabs(t.pseudoRapidity()) > 1.) return false;//pridano fabs 1212
-	//if (!mHFCuts->isHybridTOFHadron(trk, mHFCuts->getTofBetaBase(trk), StHFCuts::kKaon) ) return false; //SL16d
-  if (!mHFCuts->isHybridTOFHadron(trk, mHFCuts->getTofBetaBase(trk, mPicoDst->event()->bField()), StHFCuts::kKaon) ) return false; //SL16j, Vanek
+  //if (!mHFCuts->isHybridTOFHadron(trk, mHFCuts->getTofBetaBase(trk), StHFCuts::kKaon) ) return false; //SL16d
+  if (!mHFCuts->isHybridTOFHadron(trk, mHFCuts->getTofBetaBase(trk), StHFCuts::kKaon, mPrimVtx) ) return false; //SL16j, Vanek
   if (!mHFCuts->cutMinDcaToPrimVertex(trk, StPicoCutsBase::kKaon)) return false;
   return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCHadron(trk, StPicoCutsBase::kKaon));
 }
@@ -415,68 +415,70 @@ void StPicoLcAnaMaker::histoInit(TString fileBaseName, bool fillQaHists){
 
 //-----------------------------------------------------------------------
 void StPicoLcAnaMaker::addTpcDenom1(bool IsPion, bool IsKaon, bool IsProton, float pt, int centrality, float Eta, float Phi, float Vz){
-   int EtaIndex = getEtaIndexRatio(Eta);
-   int PhiIndex = getPhiIndexRatio(Phi);
-   int VzIndex = getVzIndexRatio(Vz);
-   if(EtaIndex == -1) return;
-   if(PhiIndex == -1) return;
-   if(VzIndex == -1) return;
-   //std::cout<<"2: "<<IsPion<<" "<<IsKaon<<" "<<IsProton<<" "<<pt<<" "<<centrality<<" "<<Eta<<" "<<Phi<<" "<<Vz<<" "<<EtaIndex<<" "<<PhiIndex<<" "<<VzIndex<<std::endl;
+  int EtaIndex = getEtaIndexRatio(Eta);
+  int PhiIndex = getPhiIndexRatio(Phi);
+  int VzIndex = getVzIndexRatio(Vz);
+  if(EtaIndex == -1) return;
+  if(PhiIndex == -1) return;
+  if(VzIndex == -1) return;
+  //std::cout<<"2: "<<IsPion<<" "<<IsKaon<<" "<<IsProton<<" "<<pt<<" "<<centrality<<" "<<Eta<<" "<<Phi<<" "<<Vz<<" "<<EtaIndex<<" "<<PhiIndex<<" "<<VzIndex<<std::endl;
 
-   if (IsPion){
-      mh2Tpc1PtCentPartEtaVzPhi[0][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
-      //if(mh2Tpc1PtCentPartEtaVzPhi[0][EtaIndex][VzIndex][PhiIndex]) std::cout<<"true"<<<<std::endl;
-      //std::cout<<pt<<" "<<centrality<<std::endl;
-   }
-   if (IsKaon){
-      mh2Tpc1PtCentPartEtaVzPhi[1][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
-   }
-   if (IsProton){
-      mh2Tpc1PtCentPartEtaVzPhi[2][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
-   }
-   mh2Tpc1PtCent->Fill(pt, centrality);
-   if (fabs(Eta) < mHFCuts->cutEta()  && pt > mHFCuts->cutPt()) mh2Tpc1PhiVz->Fill(Phi, Vz);
+  if (IsPion){
+    mh2Tpc1PtCentPartEtaVzPhi[0][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
+    //if(mh2Tpc1PtCentPartEtaVzPhi[0][EtaIndex][VzIndex][PhiIndex]) std::cout<<"true"<<<<std::endl;
+    //std::cout<<pt<<" "<<centrality<<std::endl;
+  }
+  if (IsKaon){
+    mh2Tpc1PtCentPartEtaVzPhi[1][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
+  }
+  if (IsProton){
+    mh2Tpc1PtCentPartEtaVzPhi[2][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
+  }
+  mh2Tpc1PtCent->Fill(pt, centrality);
+  if (fabs(Eta) < mHFCuts->getEtaMax(StPicoCutsBase::kPion)  && pt > mHFCuts->getPtMin(StPicoCutsBase::kPion)) mh2Tpc1PhiVz->Fill(Phi, Vz); 
+  // the eta and pt cuts are the same for all particles so, arbitrarily, pion was chosen
 }
 //-----------------------------------------------------------------------
 void StPicoLcAnaMaker::addHFTNumer1(bool IsPion, bool IsKaon, bool IsProton, float pt, int centrality, float Eta, float Phi, float Vz){
-   int EtaIndex = getEtaIndexRatio(Eta);
-   int PhiIndex = getPhiIndexRatio(Phi);
-   int VzIndex = getVzIndexRatio(Vz);
-   if(EtaIndex == -1) return;
-   if(PhiIndex == -1) return;
-   if(VzIndex == -1) return;
-   if (IsPion){
-      mh2HFT1PtCentPartEtaVzPhi[0][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
-   }
-   if (IsKaon){
-      mh2HFT1PtCentPartEtaVzPhi[1][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
-   }
-   if (IsProton){
-      mh2HFT1PtCentPartEtaVzPhi[2][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
-   }
-   mh2HFT1PtCent->Fill(pt, centrality);
-   if (fabs(Eta) < mHFCuts->cutEta()  && pt > mHFCuts->cutPt()) mh2HFT1PhiVz->Fill(Phi, Vz);
+  int EtaIndex = getEtaIndexRatio(Eta);
+  int PhiIndex = getPhiIndexRatio(Phi);
+  int VzIndex = getVzIndexRatio(Vz);
+  if(EtaIndex == -1) return;
+  if(PhiIndex == -1) return;
+  if(VzIndex == -1) return;
+  if (IsPion){
+    mh2HFT1PtCentPartEtaVzPhi[0][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
+  }
+  if (IsKaon){
+    mh2HFT1PtCentPartEtaVzPhi[1][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
+  }
+  if (IsProton){
+    mh2HFT1PtCentPartEtaVzPhi[2][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
+  }
+  mh2HFT1PtCent->Fill(pt, centrality);
+  if (fabs(Eta) < mHFCuts->getEtaMax(StPicoCutsBase::kPion)  && pt > mHFCuts->getPtMin(StPicoCutsBase::kPion)) mh2HFT1PhiVz->Fill(Phi, Vz);
+  // eta and pt cuts are the same for all particle species so, arbitrarily, pion was chosen
 }
 //---------------------------------------------------------------------
 void StPicoLcAnaMaker::addDcaPtCent(float dca, float dcaXy, float dcaZ, bool IsPion, bool IsKaon, bool IsProton, float pt,  int centrality, float Eta, float Phi, float Vz){
-   int EtaIndex = getEtaIndexDca(Eta);
-   int VzIndex = getVzIndexDca(Vz);
-   if(EtaIndex == -1) return;
-   if(VzIndex == -1) return;
+  int EtaIndex = getEtaIndexDca(Eta);
+  int VzIndex = getVzIndexDca(Vz);
+  if(EtaIndex == -1) return;
+  if(VzIndex == -1) return;
 
-   if (centrality < 0) return; // remove bad centrality, only keep 9 centralities
-   if (IsPion){
-      mh3DcaXyZPtCentPartEtaVzPhi[0][EtaIndex][VzIndex][centrality]->Fill(pt, dcaXy, dcaZ);
-   }
-   if (IsKaon){
-      mh3DcaXyZPtCentPartEtaVzPhi[1][EtaIndex][VzIndex][centrality]->Fill(pt, dcaXy, dcaZ);
-   }
-   if (IsProton){
-      mh3DcaXyZPtCentPartEtaVzPhi[2][EtaIndex][VzIndex][centrality]->Fill(pt, dcaXy, dcaZ);
-   }
-   mh3DcaPtCent->Fill(pt, centrality, dca);
-   mh3DcaXyPtCent->Fill(pt, centrality, dcaXy);
-   mh3DcaZPtCent->Fill(pt, centrality, dcaZ);
+  if (centrality < 0) return; // remove bad centrality, only keep 9 centralities
+  if (IsPion){
+    mh3DcaXyZPtCentPartEtaVzPhi[0][EtaIndex][VzIndex][centrality]->Fill(pt, dcaXy, dcaZ);
+  }
+  if (IsKaon){
+    mh3DcaXyZPtCentPartEtaVzPhi[1][EtaIndex][VzIndex][centrality]->Fill(pt, dcaXy, dcaZ);
+  }
+  if (IsProton){
+    mh3DcaXyZPtCentPartEtaVzPhi[2][EtaIndex][VzIndex][centrality]->Fill(pt, dcaXy, dcaZ);
+  }
+  mh3DcaPtCent->Fill(pt, centrality, dca);
+  mh3DcaXyPtCent->Fill(pt, centrality, dcaXy);
+  mh3DcaZPtCent->Fill(pt, centrality, dcaZ);
 }
 //---------------------------------------------------------------------
 int StPicoLcAnaMaker::getEtaIndexDca(float Eta){
@@ -537,66 +539,66 @@ int StPicoLcAnaMaker::getVzIndexRatio(float Vz){
 
 void StPicoLcAnaMaker::addCent(const double refmultCor, int centrality, const double reweight, const float vz)
 {
-   mh1gRefmultCor->Fill(refmultCor);
-   mh1gRefmultCorWg->Fill(refmultCor, reweight);
-   mh1Cent->Fill(centrality);
-   mh1CentWg->Fill(centrality, reweight);
-   mh2CentVz->Fill(centrality, vz);
-   mh2CentVzWg->Fill(centrality, vz, reweight);
+  mh1gRefmultCor->Fill(refmultCor);
+  mh1gRefmultCorWg->Fill(refmultCor, reweight);
+  mh1Cent->Fill(centrality);
+  mh1CentWg->Fill(centrality, reweight);
+  mh2CentVz->Fill(centrality, vz);
+  mh2CentVzWg->Fill(centrality, vz, reweight);
 }
 
 //---------------------------------------------------------------------
 void StPicoLcAnaMaker::closeFile()
 {
-   //mOutFile->cd(); //do not want second file this time
+  //mOutFile->cd(); //do not want second file this time
 //	cout<<"CloseFile1"<<endl;
-   mh1Cent->Write();
-   mh1CentWg->Write();
-   mh1gRefmultCor->Write();
-   mh1gRefmultCorWg->Write();
-   mh2CentVz->Write();
-   mh2CentVzWg->Write();
+  mh1Cent->Write();
+  mh1CentWg->Write();
+  mh1gRefmultCor->Write();
+  mh1gRefmultCorWg->Write();
+  mh2CentVz->Write();
+  mh2CentVzWg->Write();
 //	cout<<"CloseFile2"<<endl;
-   //HFT ratio QA
-   mh2Tpc1PtCent->Write();
-   mh2Tpc1PhiVz->Write();
-   mh2HFT1PhiVz->Write();
-   mh2HFT1PtCent->Write();
+  //HFT ratio QA
+  mh2Tpc1PtCent->Write();
+  mh2Tpc1PhiVz->Write();
+  mh2HFT1PhiVz->Write();
+  mh2HFT1PtCent->Write();
 //	cout<<"CloseFile3"<<endl;
-   //HFT DCA Ratio
-   for (int iParticle = 0; iParticle < m_nParticles; iParticle++)
-   {
-      for (int iEta = 0; iEta < m_nEtasDca; iEta++)
+  //HFT DCA Ratio
+  for (int iParticle = 0; iParticle < m_nParticles; iParticle++)
+  {
+    for (int iEta = 0; iEta < m_nEtasDca; iEta++)
+    {
+      for (int iVz = 0; iVz < m_nVzsDca; iVz++)
       {
-         for (int iVz = 0; iVz < m_nVzsDca; iVz++)
-         {
-            for (int iCent = 0; iCent < m_nCentsDca; iCent++)
-            {
-               mh3DcaXyZPtCentPartEtaVzPhi[iParticle][iEta][iVz][iCent]->Write();
-            }
-         }
+	for (int iCent = 0; iCent < m_nCentsDca; iCent++)
+	{
+	  mh3DcaXyZPtCentPartEtaVzPhi[iParticle][iEta][iVz][iCent]->Write();
+	}
       }
-   }
+    }
+  }
   // std::cout<<"tuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"<<m_nParticles<<" "<<m_nEtasRatio<<std::endl;
 //cout<<"CloseFile4"<<endl;
-   for (int iParticle = 0; iParticle < m_nParticles; iParticle++)
-   {
-      for (int iEta = 0; iEta < m_nEtasRatio; iEta++)
+  for (int iParticle = 0; iParticle < m_nParticles; iParticle++)
+  {
+    for (int iEta = 0; iEta < m_nEtasRatio; iEta++)
+    {
+      for (int iVz = 0; iVz < m_nVzsRatio; iVz++)
       {
-         for (int iVz = 0; iVz < m_nVzsRatio; iVz++)
-         {
-            for (int iPhi = 0; iPhi < m_nPhisRatio; iPhi++)
-            {
-               mh2Tpc1PtCentPartEtaVzPhi[iParticle][iEta][iVz][iPhi]->Write();
-               mh2HFT1PtCentPartEtaVzPhi[iParticle][iEta][iVz][iPhi]->Write();
-            }
-         }
+	for (int iPhi = 0; iPhi < m_nPhisRatio; iPhi++)
+	{
+	  mh2Tpc1PtCentPartEtaVzPhi[iParticle][iEta][iVz][iPhi]->Write();
+	  mh2HFT1PtCentPartEtaVzPhi[iParticle][iEta][iVz][iPhi]->Write();
+	}
       }
-   }
+    }
+  }
 
-   mh3DcaPtCent->Write();
-   mh3DcaXyPtCent->Write();
-   mh3DcaZPtCent->Write();
+  mh3DcaPtCent->Write();
+  mh3DcaXyPtCent->Write();
+  mh3DcaZPtCent->Write();
 }
 
 

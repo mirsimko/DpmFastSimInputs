@@ -14,9 +14,9 @@
 #include "StBTofUtil/tofPathLength.hh"
 
 #include "StPicoDstMaker/StPicoDst.h"
-#include "StPicoDstMaker/StPicoTrack.h"
-#include "StPicoDstMaker/StPicoEvent.h"
-#include "StPicoDstMaker/StPicoBTofPidTraits.h"
+#include "StPicoEvent/StPicoTrack.h"
+#include "StPicoEvent/StPicoEvent.h"
+#include "StPicoEvent/StPicoBTofPidTraits.h"
 
 ClassImp(StPicoCutsBase)
 

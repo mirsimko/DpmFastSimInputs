@@ -3,7 +3,7 @@
 #include "TH2F.h"
 #include "TFile.h"
 #include "TString.h"
-#include "StPicoDstMaker/StPicoEvent.h"
+#include "StPicoEvent/StPicoEvent.h"
 #include "StPicoPrescales/StPicoPrescales.h"
 #include "StPicoHFEvent.h"
 #include "StHFPair.h"
