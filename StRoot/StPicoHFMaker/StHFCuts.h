@@ -29,12 +29,12 @@ class StPicoTrack; //Vanek
 
 class StHFCuts : public StPicoCutsBase
 {
- public:
-  
+public:
+
   StHFCuts();
   StHFCuts(const Char_t *name);
   ~StHFCuts();
-  
+
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
 
   virtual void init() { initBase(); }
@@ -47,48 +47,49 @@ class StHFCuts : public StPicoCutsBase
   bool isGoodTertiaryVertexPair(StHFPair const & pair) const;
   bool isGoodSecondaryVertexTriplet(StHFTriplet const & triplet) const;
 
-//---------MY CUTS----------------------------------------------------------
+  //---------MY CUTS----------------------------------------------------------
 
-	bool hasGoodNHitsFitMinHist(StPicoTrack const *track)	const;
-	bool hasGoodEta(StThreeVectorF const & trkMom) const;
-	bool hasGoodNSigmaHist(StPicoTrack const *track, int hadrFlag) const;
-	bool hasGoodTripletdV0Max(StHFTriplet const &triplet) const;
-	bool hasGoodPtQA(StPicoTrack const *track) const;
+  inline bool hasGoodNHitsFitMinHist(StPicoTrack const *track)	const;
+  inline bool hasGoodNHitsFitnHitsMax(StPicoTrack const *track) const;
+  inline bool hasGoodEta(StThreeVectorF const & trkMom) const;
+  inline bool hasGoodNSigmaHist(StPicoTrack const *track, int hadrFlag) const;
+  inline bool hasGoodTripletdV0Max(StHFTriplet const &triplet) const;
+  inline bool hasGoodPtQA(StPicoTrack const *track) const;
 
 
-//--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
   // -- SETTER for CUTS
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
-  
+
   void setCutSecondaryPair(float dcaDaughtersMax, float decayLengthMin, float decayLengthMax, 
-  float cosThetaMin, float massMin, float massMax); 
-  
+			   float cosThetaMin, float massMin, float massMax); 
+
   void setCutTertiaryPair(float dcaDaughtersMax, float decayLengthMin, float decayLengthMax, 
-	float cosThetaMin, float massMin, float massMax); 
-  
+			  float cosThetaMin, float massMin, float massMax); 
+
   void setCutSecondaryTriplet(float dcaDaughters12Max, float dcaDaughters23Max, float dcaDaughters31Max, 
-  float decayLengthMin, float decayLengthMax, 
-	float cosThetaMin, float massMin, float massMax);
+			      float decayLengthMin, float decayLengthMax, 
+			      float cosThetaMin, float massMin, float massMax);
 
   void setCutSecondaryPairDcaToPvMax(float dcaToPvMax){ mSecondaryPairDcaToPvMax = dcaToPvMax; }
 
   void setCutTertiaryPairDcaToPvMax(float dcaToPvMax) { mTertiaryPairDcaToPvMax = dcaToPvMax; }
 
-	void setCutPtQA(float PtQA) { mPtQA = PtQA; }
+  void setCutPtQA(float PtQA) { mPtQA = PtQA; }
 
-//----MY SETTERS------------------------------------------------------------------------------------------
+  //----MY SETTERS------------------------------------------------------------------------------------------
 
-	void setCutNHitsFitMinHist(int i) {mNHitsFitMinHist = i;}
-	void setCutEta(float eta) { mEta = eta; }
-	void setCutTPCNSigmaHadronHist(float nSigHadr, int hadrFlag);
-	void setCutTripletdV0Max(float dV0MaxSetCut) {mdV0MaxCut = dV0MaxSetCut;}
+  void setCutNHitsFitMinHist(int i) {mNHitsFitMinHist = i;}
+  void setCutEta(float eta) { mEta = eta; }
+  void setCutTPCNSigmaHadronHist(float nSigHadr, int hadrFlag);
+  void setCutTripletdV0Max(float dV0MaxSetCut) {mdV0MaxCut = dV0MaxSetCut;}
 
-	void setCutDca(float dca) { mDcaQA = dca; }
-	void setCutDcaXy(float dcaXy) { mDcaXyQA = dcaXy; }
-	void setCutDcaZ(float dcaZ) { mDcaZQA = dcaZ; }
-//--------------------------------------------------------------------------------------------------------
+  void setCutDca(float dca) { mDcaQA = dca; }
+  void setCutDcaXy(float dcaXy) { mDcaXyQA = dcaXy; }
+  void setCutDcaZ(float dcaZ) { mDcaZQA = dcaZ; }
+  //--------------------------------------------------------------------------------------------------------
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
   // -- GETTER for single CUTS
@@ -119,39 +120,39 @@ class StHFCuts : public StPicoCutsBase
   const float&    cutSecondaryTripletMassMin()            const;
   const float&    cutSecondaryTripletMassMax()            const;
 
-//----MY GETTERS------------------------------------------------------------------------------------------
+  //----MY GETTERS------------------------------------------------------------------------------------------
 
-	const float&		cutEta() const;
-	const float&		cutPt() const;
+  const float&    cutEta() const;
+  const float&    cutPt() const;
 
-	const float&		cutDca() const;
-	const float&		cutDcaXy() const;
-	const float&		cutDcaZ() const;
-//--------------------------------------------------------------------------------------------------------
+  const float&    cutDca() const;
+  const float&    cutDcaXy() const;
+  const float&    cutDcaZ() const;
+  //--------------------------------------------------------------------------------------------------------
 
- private:
-  
+private:
+
   StHFCuts(StHFCuts const &);       
   StHFCuts& operator=(StHFCuts const &);
 
-	//---MY VARIABLES------------------------
-	
-	int mNHitsFitMinHist;
-	float mEta;
+  //---MY VARIABLES------------------------
 
-	float mNSigPionHist;
+  int mNHitsFitMinHist;
+  float mEta;
+
+  float mNSigPionHist;
   float mNSigKaonHist;
-	float mNSigProtonHist;
+  float mNSigProtonHist;
 
-	float mdV0MaxCut;
+  float mdV0MaxCut;
 
-	float mPtQA;
+  float mPtQA;
 
-	float mDcaQA;
-	float mDcaXyQA;
-	float mDcaZQA;
+  float mDcaQA;
+  float mDcaXyQA;
+  float mDcaZQA;
 
-	//---------------------------------------
+  //---------------------------------------
 
   // ------------------------------------------
   // -- Pair cuts for secondary pair
@@ -247,12 +248,12 @@ inline const float&    StHFCuts::cutSecondaryTripletCosThetaMin()        const {
 inline const float&    StHFCuts::cutSecondaryTripletMassMin()            const { return mSecondaryTripletMassMin; }
 inline const float&    StHFCuts::cutSecondaryTripletMassMax()            const { return mSecondaryTripletMassMax; }
 
-inline const float&		 StHFCuts::cutEta()		const { return mEta; }
-inline const float&		 StHFCuts::cutPt()		const { return mPtQA; }
+inline const float&    StHFCuts::cutEta()				 const { return mEta; }
+inline const float&    StHFCuts::cutPt()				 const { return mPtQA; }
 
-inline const float&		 StHFCuts::cutDca()		const { return mDcaQA; }
-inline const float&		 StHFCuts::cutDcaXy() const { return mDcaXyQA; }
-inline const float&		 StHFCuts::cutDcaZ()	const { return mDcaZQA; }
+inline const float&    StHFCuts::cutDca()				 const { return mDcaQA; }
+inline const float&    StHFCuts::cutDcaXy()                              const { return mDcaXyQA; }
+inline const float&    StHFCuts::cutDcaZ()                               const { return mDcaZQA; }
 
 
 #endif

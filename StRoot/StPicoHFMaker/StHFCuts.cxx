@@ -11,6 +11,17 @@ ClassImp(StHFCuts)
 
 // _________________________________________________________
 StHFCuts::StHFCuts() : StPicoCutsBase("HFCutsBase"), 
+  mNHitsFitMinHist(std::numeric_limits<int>::lowest()),
+  mEta(std::numeric_limits<float>::max()),
+  mNSigPionHist(std::numeric_limits<float>::max()),
+  mNSigKaonHist(std::numeric_limits<float>::max()),
+  mNSigProtonHist(std::numeric_limits<float>::max()),
+  mdV0MaxCut(std::numeric_limits<float>::max()),
+  mPtQA(std::numeric_limits<float>::lowest()),
+  mDcaQA(std::numeric_limits<float>::lowest()),
+  mDcaXyQA(std::numeric_limits<float>::lowest()),
+  mDcaZQA(std::numeric_limits<float>::lowest()),
+
   mSecondaryPairDcaDaughtersMax(std::numeric_limits<float>::max()), 
   mSecondaryPairDecayLengthMin(std::numeric_limits<float>::lowest()), mSecondaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
   mSecondaryPairCosThetaMin(std::numeric_limits<float>::lowest()), 
@@ -28,11 +39,22 @@ StHFCuts::StHFCuts() : StPicoCutsBase("HFCutsBase"),
   mSecondaryTripletDecayLengthMin(std::numeric_limits<float>::lowest()), mSecondaryTripletDecayLengthMax(std::numeric_limits<float>::max()), 
   mSecondaryTripletCosThetaMin(std::numeric_limits<float>::lowest()), 
   mSecondaryTripletMassMin(std::numeric_limits<float>::lowest()), mSecondaryTripletMassMax(std::numeric_limits<float>::max()) {
-  // -- default constructor
+    // -- default constructor
 }
 
 // _________________________________________________________
 StHFCuts::StHFCuts(const Char_t *name) : StPicoCutsBase(name), 
+  mNHitsFitMinHist(std::numeric_limits<int>::lowest()),
+  mEta(std::numeric_limits<float>::max()),
+  mNSigPionHist(std::numeric_limits<float>::max()),
+  mNSigKaonHist(std::numeric_limits<float>::max()),
+  mNSigProtonHist(std::numeric_limits<float>::max()),
+  mdV0MaxCut(std::numeric_limits<float>::max()),
+  mPtQA(std::numeric_limits<float>::lowest()),
+  mDcaQA(std::numeric_limits<float>::lowest()),
+  mDcaXyQA(std::numeric_limits<float>::lowest()),
+  mDcaZQA(std::numeric_limits<float>::lowest()),
+
   mSecondaryPairDcaDaughtersMax(std::numeric_limits<float>::max()), 
   mSecondaryPairDecayLengthMin(std::numeric_limits<float>::lowest()), mSecondaryPairDecayLengthMax(std::numeric_limits<float>::max()), 
   mSecondaryPairCosThetaMin(std::numeric_limits<float>::lowest()), 
@@ -56,7 +78,6 @@ StHFCuts::StHFCuts(const Char_t *name) : StPicoCutsBase(name),
 // _________________________________________________________
 StHFCuts::~StHFCuts() { 
   // destructor
-  
 }
 
 // =======================================================================
@@ -105,48 +126,48 @@ bool StHFCuts::isGoodSecondaryVertexTriplet(StHFTriplet const & triplet) const {
 }
 
 // _________________________________________________________
-bool StHFCuts::hasGoodNHitsFitMinHist(StPicoTrack const *track) const {
-	return ( track->nHitsFit()>=mNHitsFitMinHist );
+inline bool StHFCuts::hasGoodNHitsFitMinHist(StPicoTrack const *track) const {
+  return ( track->nHitsFit()>=mNHitsFitMinHist );
 }
 
 // _________________________________________________________
-bool StHFCuts::hasGoodEta(StThreeVectorF const & trkMom) const {
-	return ( fabs(trkMom.pseudoRapidity())<= mEta );
+inline bool StHFCuts::hasGoodEta(StThreeVectorF const & trkMom) const {
+  return ( fabs(trkMom.pseudoRapidity()) <= mEta );
 }
 
 // _________________________________________________________
-void StHFCuts::setCutTPCNSigmaHadronHist(float nSigHadr, int hadrFlag) {
-
-		switch(hadrFlag)
-		{
-			case 1: mNSigPionHist = nSigHadr;
-			case 2: mNSigKaonHist = nSigHadr;
-			case 3: mNSigProtonHist = nSigHadr;
-		}
+inline void StHFCuts::setCutTPCNSigmaHadronHist(float nSigHadr, int hadrFlag) {
+  // msimko: "awefull needs changing"
+  switch(hadrFlag)
+  {
+    case StPicoCutsBase::kPion: mNSigPionHist = nSigHadr;
+    case StPicoCutsBase::kKaon: mNSigKaonHist = nSigHadr;
+    case StPicoCutsBase::kProton: mNSigProtonHist = nSigHadr;
+    default: std::cerr << "StHFCuts::setCutTPCNSigmaHadronHist: unexpected particle: exitting" << std::endl; return;
+  }
 
 
 }
 
 // _________________________________________________________
 bool StHFCuts::hasGoodNSigmaHist(StPicoTrack const *track, int hadrFlag) const {
-	switch(hadrFlag)
-		{
-			case 1: return (fabs(track->nSigmaPion()) < mNSigPionHist );
-			case 2: return (fabs(track->nSigmaKaon()) < mNSigKaonHist );
-			case 3: return (fabs(track->nSigmaProton()) < mNSigProtonHist);
-		}
-	
+  switch(hadrFlag)
+  {
+    case StPicoCutsBase::kPion: return (fabs(track->nSigmaPion()) < mNSigPionHist );
+    case StPicoCutsBase::kKaon: return (fabs(track->nSigmaKaon()) < mNSigKaonHist );
+    case StPicoCutsBase::kProton: return (fabs(track->nSigmaProton()) < mNSigProtonHist);
+    default: std::cerr << "StHFCuts::hasGoodNSigmaHist: unexpected particle: exitting" << std::endl; return 0;
+  }
+
 }
 
 // _________________________________________________________
 bool StHFCuts::hasGoodTripletdV0Max(StHFTriplet const &triplet) const {
-	return( triplet.dV0Max() > mdV0MaxCut );
-
+  return( triplet.dV0Max() > mdV0MaxCut );
 }
 
 // _________________________________________________________
 bool StHFCuts::hasGoodPtQA(StPicoTrack const *track) const {
-
-	return ( track->gPt() > mPtQA  );
+  return ( track->gPt() > mPtQA  );
 }
 

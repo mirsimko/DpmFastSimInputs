@@ -26,8 +26,6 @@ int StPicoLcAnaMaker::InitHF() {
   // -- INITIALIZE USER HISTOGRAMS ETC HERE -------------------
   //    add them to the output list mOutList which is automatically written
 
-  // EXAMPLE //  mOutList->Add(new TH1F(...));
-  // EXAMPLE //  TH1F* hist = static_cast<TH1F*>(mOutList->Last());
   cout<<"InitHF1"<<endl;
   mOutFileBaseName = mOutFileBaseName.ReplaceAll(".root", "");
   histoInit(mOutFileBaseName, true); //for createQA()
@@ -114,7 +112,7 @@ int StPicoLcAnaMaker::createQA(){
     if (!(mHFCuts->hasGoodPtQA(trk))) continue;
     if (!(mHFCuts->hasGoodNHitsFitMinHist(trk))) continue;
     if (!(mHFCuts->hasGoodNHitsFitnHitsMax(trk))) continue; //nHitsFit/nHitsMax
-    if (!(mHFCuts->isInsideEtaRange(trk, StPicoCutsBase::kPion))) continue;
+    if (!(mHFCuts->hasGoodEta(momentum))) continue;
 
     StThreeVectorF dcaPoint = helix.at(helix.pathLength(mPrimVtx.x(), mPrimVtx.y()));
     float dcaZ = dcaPoint.z() - mPrimVtx.z();
@@ -123,11 +121,11 @@ int StPicoLcAnaMaker::createQA(){
     bool tpcPion = false;
     bool tpcKaon = false;
     bool tpcProton = false;
-    if(mHFCuts->hasGoodTPCnSigmaPion(trk)) tpcPion = true;
-    if(mHFCuts->hasGoodTPCnSigmaKaon(trk)) tpcKaon = true;
-    if(mHFCuts->hasGoodTPCnSigmaProton(trk)) tpcProton = true;
+    if(mHFCuts->hasGoodNSigmaHist(trk, StPicoCutsBase::kPion)) tpcPion = true;
+    if(mHFCuts->hasGoodNSigmaHist(trk, StPicoCutsBase::kKaon)) tpcKaon = true;
+    if(mHFCuts->hasGoodNSigmaHist(trk, StPicoCutsBase::kProton)) tpcProton = true;
     //float hBeta = mHFCuts->getTofBetaBase(trk); //SL16d
-    float hBeta = mHFCuts->getTofBetaBase(trk, mPicoDst->event()->bField()); //SL16j, Vanek
+    float hBeta = mHFCuts->getTofBetaBase(trk); //SL16j, Vanek
     bool hTofAvailable = !isnan(hBeta) && hBeta > 0;
 
     bool goodPion = tpcPion; //do not want TOF for HFT matching and resolution determination
@@ -141,11 +139,6 @@ int StPicoLcAnaMaker::createQA(){
       //std::cout<<"1: "<<goodPion<<" "<< goodKaon<<" "<<  goodProton<<" "<<  momentum.perp()<<" "<<  centrality<<" "<<  momentum.pseudoRapidity()<<" "<<  momentum.phi()<<" "<<  mPrimVtx.z()<<std::endl;
       addTpcDenom1(goodPion, goodKaon, goodProton, momentum.perp(), centrality, momentum.pseudoRapidity(), momentum.phi(), mPrimVtx.z()); //Dca cut on 1.5cm, add Tpc Denominator
     }
-    /* old Kvapil
-       if (trk && fabs(dca) < mHFCuts->cutDca() && trk->isHFTTrack() && (goodPion || goodKaon || goodProton) && fabs(dcaXy) < mHFCuts->cutDcaXy() && fabs(dcaZ) < mHFCuts->cutDcaZ()){
-       addHFTNumer1(goodPion, goodKaon, goodProton, momentum.perp(), centrality,  momentum.pseudoRapidity(), momentum.phi(), mPrimVtx.z()); //Dca cut on 1.5cm, add HFT Numerator
-       }
-       */
     //new version, Vanek 03/10/18
     if (trk && fabs(dca) < mHFCuts->cutDca() && trk->isHFTTrack() && (goodPion || goodKaon || goodProton)){
       addHFTNumer1(goodPion, goodKaon, goodProton, momentum.perp(), centrality,  momentum.pseudoRapidity(), momentum.phi(), mPrimVtx.z()); //Dca cut on 1.5cm, add HFT Numerator
@@ -231,19 +224,10 @@ int StPicoLcAnaMaker::analyzeCandidates() {
       float kaonBetaBase = -1;
       float pion1BetaBase = -1;
       float pion2BetaBase = -1;
-/*      kaonBetaBase = mHFCuts->getTofBetaBase(kaon); //SL16d
-	pion1BetaBase = mHFCuts->getTofBetaBase(pion1);
-	pion2BetaBase = mHFCuts->getTofBetaBase(pion2);
-	*/
+
       kaonBetaBase = mHFCuts->getTofBetaBase(kaon); //SL16j, Vanek
       pion1BetaBase = mHFCuts->getTofBetaBase(pion1);
       pion2BetaBase = mHFCuts->getTofBetaBase(pion2);
-
-    /* orig. Kvapil
-       float kaonTOFinvbeta = fabs(1. / mHFCuts->getTofBetaBase(kaon) - sqrt(1+M_KAON_PLUS*M_KAON_PLUS/(kaon->gMom(mPrimVtx,mBField).mag()*kaon->gMom(mPrimVtx,mBField).mag())));
-       float pion1TOFinvbeta = fabs(1. / mHFCuts->getTofBetaBase(pion1) - sqrt(1+M_PION_PLUS*M_PION_PLUS/(pion1->gMom(mPrimVtx,mBField).mag()*pion1->gMom(mPrimVtx,mBField).mag())));
-       float pion2TOFinvbeta = fabs(1. / mHFCuts->getTofBetaBase(pion2) - sqrt(1+M_PION_PLUS*M_PION_PLUS/(pion2->gMom(mPrimVtx,mBField).mag()*pion2->gMom(mPrimVtx,mBField).mag())));
-       */
 
       //update Vanek
       float kaonTOFinvbeta = fabs(1. / kaonBetaBase - sqrt(1+M_KAON_PLUS*M_KAON_PLUS/(kaon->gMom(mPrimVtx,mBField).mag()*kaon->gMom(mPrimVtx,mBField).mag())));
@@ -306,10 +290,6 @@ bool StPicoLcAnaMaker::isProton(StPicoTrack const * const trk) const {
 
 double StPicoLcAnaMaker::DCA(StPicoTrack const * const trk, StThreeVectorF const & vtx) const {
   // -- particle DCA
-/*  StPhysicalHelixD pHelix = trk->dcaGeometry().helix(); //SL16d
-  pHelix.moveOrigin(pHelix.pathLength(vtx));
-  return ((pHelix.origin() - vtx).mag());
-*/
   return ((trk->origin() - vtx).mag()); //SL16j, Vanek
 }
 
@@ -532,7 +512,7 @@ int StPicoLcAnaMaker::getVzIndexRatio(float Vz){
     if ((Vz >= VzEdgeRatio[i]) && (Vz < VzEdgeRatio[i + 1]))
       return i;
   }
-  //std::cout<<"SOMETHING WENT TERRIBLE WRONG"<<std::endl;
+  //std::cout<<"SOMETHING WENT TERRIBLY WRONG"<<std::endl;
   // return m_nVzsRatio - 1;
   return -1;
 }
