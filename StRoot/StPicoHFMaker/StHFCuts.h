@@ -21,9 +21,12 @@
  */
 
 #include "StPicoCutsBase/StPicoCutsBase.h"
-
+#include "StPicoEvent/StPicoTrack.h"
+#include "StHFPair.h"
+#include "StHFTriplet.h"
 
 class StHFPair;
+class StHFClosePair;
 class StHFTriplet;
 class StPicoTrack; //Vanek
 
@@ -42,6 +45,7 @@ public:
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
 
   bool isClosePair(StHFPair const & pair) const;
+  bool isClosePair(StHFClosePair const & pair) const;
 
   bool isGoodSecondaryVertexPair(StHFPair const & pair) const;
   bool isGoodTertiaryVertexPair(StHFPair const & pair) const;
@@ -138,6 +142,7 @@ private:
   //---MY VARIABLES------------------------
 
   int mNHitsFitMinHist;
+  float mMinNHitsFitNHitsMaxRatio;
   float mEta;
 
   float mNSigPionHist;
@@ -223,6 +228,18 @@ inline void StHFCuts::setCutSecondaryTriplet(float dcaDaughters12Max, float dcaD
   mSecondaryPairDcaDaughtersMax = mSecondaryTripletDecayLengthMax;
 }
 
+// _________________________________________________________
+inline void StHFCuts::setCutTPCNSigmaHadronHist(float nSigHadr, int hadrFlag) {
+  switch(hadrFlag)
+  {
+    case StPicoCutsBase::kPion: mNSigPionHist = nSigHadr;
+    case StPicoCutsBase::kKaon: mNSigKaonHist = nSigHadr;
+    case StPicoCutsBase::kProton: mNSigProtonHist = nSigHadr;
+    default: std::cerr << "StHFCuts::setCutTPCNSigmaHadronHist: unexpected particle: exitting" << std::endl; return;
+  }
+}
+// _________________________________________________________
+
 inline const float&    StHFCuts::cutSecondaryPairDcaDaughtersMax()       const { return mSecondaryPairDcaDaughtersMax; }
 inline const float&    StHFCuts::cutSecondaryPairDecayLengthMin()        const { return mSecondaryPairDecayLengthMin; }
 inline const float&    StHFCuts::cutSecondaryPairDecayLengthMax()        const { return mSecondaryPairDecayLengthMax; }
@@ -263,22 +280,13 @@ inline bool StHFCuts::hasGoodNHitsFitMinHist(StPicoTrack const *track) const {
 }
 
 // _________________________________________________________
-inline bool StHFCuts::hasGoodEta(StThreeVectorF const & trkMom) const {
-  return ( fabs(trkMom.pseudoRapidity()) <= mEta );
+inline bool StHFCuts::hasGoodNHitsFitnHitsMax(StPicoTrack const *track) const {
+  return ( static_cast<float>(track->nHitsFit()) / static_cast<float>(track->nHitsMax()) ) >= mMinNHitsFitNHitsMaxRatio;
 }
 
 // _________________________________________________________
-inline void StHFCuts::setCutTPCNSigmaHadronHist(float nSigHadr, int hadrFlag) {
-  // msimko: "awefull needs changing"
-  switch(hadrFlag)
-  {
-    case StPicoCutsBase::kPion: mNSigPionHist = nSigHadr;
-    case StPicoCutsBase::kKaon: mNSigKaonHist = nSigHadr;
-    case StPicoCutsBase::kProton: mNSigProtonHist = nSigHadr;
-    default: std::cerr << "StHFCuts::setCutTPCNSigmaHadronHist: unexpected particle: exitting" << std::endl; return;
-  }
-
-
+inline bool StHFCuts::hasGoodEta(StThreeVectorF const & trkMom) const {
+  return ( fabs(trkMom.pseudoRapidity()) <= mEta );
 }
 
 // _________________________________________________________

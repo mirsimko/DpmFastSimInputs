@@ -3,6 +3,7 @@
 #include "StHFCuts.h"
 
 #include "StHFPair.h"
+#include "StHFClosePair.h"
 #include "StHFTriplet.h"
 
 #include "StPicoEvent/StPicoTrack.h" //Vanek
@@ -12,6 +13,7 @@ ClassImp(StHFCuts)
 // _________________________________________________________
 StHFCuts::StHFCuts() : StPicoCutsBase("HFCutsBase"), 
   mNHitsFitMinHist(std::numeric_limits<int>::lowest()),
+  mMinNHitsFitNHitsMaxRatio(std::numeric_limits<float>::lowest()),
   mEta(std::numeric_limits<float>::max()),
   mNSigPionHist(std::numeric_limits<float>::max()),
   mNSigKaonHist(std::numeric_limits<float>::max()),
@@ -45,6 +47,7 @@ StHFCuts::StHFCuts() : StPicoCutsBase("HFCutsBase"),
 // _________________________________________________________
 StHFCuts::StHFCuts(const Char_t *name) : StPicoCutsBase(name), 
   mNHitsFitMinHist(std::numeric_limits<int>::lowest()),
+  mMinNHitsFitNHitsMaxRatio(std::numeric_limits<float>::lowest()),
   mEta(std::numeric_limits<float>::max()),
   mNSigPionHist(std::numeric_limits<float>::max()),
   mNSigKaonHist(std::numeric_limits<float>::max()),
@@ -89,6 +92,12 @@ bool StHFCuts::isClosePair(StHFPair const & pair) const {
   return ( std::cos(pair.pointingAngle()) > mSecondaryPairCosThetaMin &&
 	   pair.decayLength() > mSecondaryPairDecayLengthMin && pair.decayLength() < mSecondaryPairDecayLengthMax &&
 	   pair.dcaDaughters() < mSecondaryPairDcaDaughtersMax);
+}
+
+// _________________________________________________________
+bool StHFCuts::isClosePair(StHFClosePair const & pair) const {
+  // -- check for a pair which is close in dca w/o mass constraint works with the faster StHFClosePair
+  return (pair.dcaDaughters() < mSecondaryPairDcaDaughtersMax);
 }
 
 // _________________________________________________________
