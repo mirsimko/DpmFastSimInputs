@@ -170,41 +170,21 @@ private:
   bool mFillQaHists;
   TFile* mOutFile;
 
-  //Cuts----------------------------
-  static const int m_nParticles = 3;
-  //TString m_ParticleName[m_nParticles];
-
-  static const int m_nEtasDca = 5;
-  // float m_EtaEdgeDca[m_nEtasDca+1];
-  static const int m_nPhisDca = 11;
-  //static float m_PhiEdgeDca[m_nPhisDca + 1];
-
-  static const int m_nVzsDca = 4;
-  //static float m_VzEdgeDca[m_nVzsDca + 1];
-
-  static const int m_nCentsDca = 9;
-  //static float m_CentEdgeDca[m_nCentsDca + 1];
-
-  static const int m_nPtsDca = 19;
-  // static float m_PtEdgeDca[m_nPtsDca + 1];
-
-  static const int m_nEtasRatio = 10;
-  // static float m_EtaEdgeRatio[m_nEtasRatio + 1];
-
-  static const int m_nPhisRatio = 11;
-  //static float m_PhiEdgeRatio[m_nPhisRatio + 1];
-
-  static const int m_nVzsRatio = 6;
-  //static float m_VzEdgeRatio[m_nVzsRatio + 1];
-
-  static const int m_nCentsRatio = 10;
-  // static float m_CentEdgeRatio[m_nCentsRatio + 1];
-
-  static const int m_nPtsRatio = 36;
-  // static float m_PtEdgeRatio[m_nPtsRatio + 1];
-
-  static const int m_nDcasDca = 144;
-  // static float m_DcaEdgeDca[m_nDcasDca + 1];
+  //Cuts consts: trick with enum-----
+  enum cutsConsts{
+    m_nParticles = 3,
+    m_nEtasDca = 5,
+    m_nPhisDca = 11,
+    m_nVzsDca = 4,
+    m_nCentsDca = 9,
+    m_nPtsDca = 19,
+    m_nEtasRatio = 10,
+    m_nPhisRatio = 11,
+    m_nVzsRatio = 6,
+    m_nCentsRatio = 10,
+    m_nPtsRatio = 36,
+    m_nDcasDca = 144
+  };
   //-----------------------------------
 
   TH1F* mh1Cent;

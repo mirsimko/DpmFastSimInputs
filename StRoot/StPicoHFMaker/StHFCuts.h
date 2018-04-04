@@ -256,4 +256,51 @@ inline const float&    StHFCuts::cutDcaXy()                              const {
 inline const float&    StHFCuts::cutDcaZ()                               const { return mDcaZQA; }
 
 
+// _________________________________________________________
+// inline cut functions
+inline bool StHFCuts::hasGoodNHitsFitMinHist(StPicoTrack const *track) const {
+  return ( track->nHitsFit()>=mNHitsFitMinHist );
+}
+
+// _________________________________________________________
+inline bool StHFCuts::hasGoodEta(StThreeVectorF const & trkMom) const {
+  return ( fabs(trkMom.pseudoRapidity()) <= mEta );
+}
+
+// _________________________________________________________
+inline void StHFCuts::setCutTPCNSigmaHadronHist(float nSigHadr, int hadrFlag) {
+  // msimko: "awefull needs changing"
+  switch(hadrFlag)
+  {
+    case StPicoCutsBase::kPion: mNSigPionHist = nSigHadr;
+    case StPicoCutsBase::kKaon: mNSigKaonHist = nSigHadr;
+    case StPicoCutsBase::kProton: mNSigProtonHist = nSigHadr;
+    default: std::cerr << "StHFCuts::setCutTPCNSigmaHadronHist: unexpected particle: exitting" << std::endl; return;
+  }
+
+
+}
+
+// _________________________________________________________
+inline bool StHFCuts::hasGoodNSigmaHist(StPicoTrack const *track, int hadrFlag) const {
+  switch(hadrFlag)
+  {
+    case StPicoCutsBase::kPion: return (fabs(track->nSigmaPion()) < mNSigPionHist );
+    case StPicoCutsBase::kKaon: return (fabs(track->nSigmaKaon()) < mNSigKaonHist );
+    case StPicoCutsBase::kProton: return (fabs(track->nSigmaProton()) < mNSigProtonHist);
+    default: std::cerr << "StHFCuts::hasGoodNSigmaHist: unexpected particle: exitting" << std::endl; return 0;
+  }
+}
+
+// _________________________________________________________
+inline bool StHFCuts::hasGoodTripletdV0Max(StHFTriplet const &triplet) const {
+  return( triplet.dV0Max() > mdV0MaxCut );
+}
+
+// _________________________________________________________
+inline bool StHFCuts::hasGoodPtQA(StPicoTrack const *track) const {
+  return ( track->gPt() > mPtQA  );
+}
+
+
 #endif
