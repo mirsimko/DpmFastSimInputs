@@ -152,7 +152,6 @@ private:
 
   unsigned int mDecayChannel;
 
-
   // -- ADD USER MEMBERS HERE ------------------- 
   //TNtuple *ntp_DMeson; //orig. Kvapil
   TTree *ntp_Dmeson; //Vanek
@@ -190,7 +189,6 @@ private:
   TH2F* mh2CentVz;
   TH2F* mh2CentVzWg;
 
-
   //HFT ratio QA
   TH2F* mh2Tpc1PtCent;
   TH2F* mh2Tpc1PhiVz;
@@ -225,7 +223,7 @@ private:
   int k_nHitFit, k_nHitdedx;
   float k_TOFinvbeta, k_betaBase;
 
-  //dca, flag, prim. vertex
+  //dca, flag, prim. vertex, charge
   int mcharge;
   float mdcaMax;
   int flag;

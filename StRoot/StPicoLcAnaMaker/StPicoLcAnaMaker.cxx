@@ -142,7 +142,6 @@ int StPicoLcAnaMaker::createQA(){
   return 0;
 }
 
-
 // _________________________________________________________
 bool StPicoLcAnaMaker::isHadron(StPicoTrack const * const trk, int pidFlag) const {
   // -- good hadron
@@ -252,13 +251,15 @@ void StPicoLcAnaMaker::histoInit(TString fileBaseName, bool fillQaHists){
   mh2Tpc1PhiVz  = new TH2F("mh2Tpc1PhiVz", "Tpc tacks;#Phi;Vz", 100, -3.1415, 3.1415, 20, -10, 10); //Dca 1.5cm
   mh2HFT1PhiVz  = new TH2F("mh2HFT1PhiVz", "HFT tacks;#Phi;Vz", 100, -3.1415, 3.1415, 20, -10, 10); //Dca 1.5cm
 
-  for (int iParticle = 0; iParticle < m_nParticles; iParticle++){
-    for (int iEta = 0; iEta < m_nEtasRatio; iEta++){
-      for (int iVz = 0; iVz < m_nVzsRatio; iVz++){
-	for (int iPhi = 0; iPhi < m_nPhisRatio; iPhi++){
+  for (int iCharge = 0; iCharge < m_ncharges; ++ iCharge) {
+    for (int iParticle = 0; iParticle < m_nParticles; ++iParticle){
+      for (int iEta = 0; iEta < m_nEtasRatio; ++iEta){
+	for (int iVz = 0; iVz < m_nVzsRatio; ++iVz){
+	  for (int iPhi = 0; iPhi < m_nPhisRatio; ++iPhi){
 
-	  mh2Tpc1PtCentPartEtaVzPhi[iParticle][iEta][iVz][iPhi]  = new TH2F(Form("mh2Tpc1PtCentPartEtaVzPhi_%d_%d_%d_%d", iParticle, iEta, iVz, iPhi), "mh2Tpc1PtCent_"+m_ParticleName[iParticle]+Form("_Eta%2.1f_Vz%2.1f_Phi%2.1f;p_{T}(GeV/c);cent", m_EtaEdgeRatio[iEta], m_VzEdgeRatio[iVz], m_PhiEdgeRatio[iPhi]), m_nPtsRatio, m_PtEdgeRatio, m_nCentsRatio, m_CentEdgeRatio); //Dca 1.cm
-	  mh2HFT1PtCentPartEtaVzPhi[iParticle][iEta][iVz][iPhi]  = new TH2F(Form("mh2HFT1PtCentPartEtaVzPhi_%d_%d_%d_%d", iParticle, iEta, iVz, iPhi), "mh2HFT1PtCent_"+m_ParticleName[iParticle]+Form("_Eta%2.1f_Vz%2.1f_Phi%2.1f;p_{T}(GeV/c);cent", m_EtaEdgeRatio[iEta], m_VzEdgeRatio[iVz], m_PhiEdgeRatio[iPhi]), m_nPtsRatio, m_PtEdgeRatio, m_nCentsRatio, m_CentEdgeRatio); //Dca 1.cm
+	    mh2Tpc1PtCentPartEtaVzPhi[iCharge][iParticle][iEta][iVz][iPhi]  = new TH2F(Form("mh2Tpc1PtCentPartEtaVzPhi_%d_%d_%d_%d", iParticle, iEta, iVz, iPhi), "mh2Tpc1PtCent_"+m_ParticleName[iParticle]+Form("_Eta%2.1f_Vz%2.1f_Phi%2.1f;p_{T}(GeV/c);cent", m_EtaEdgeRatio[iEta], m_VzEdgeRatio[iVz], m_PhiEdgeRatio[iPhi]), m_nPtsRatio, m_PtEdgeRatio, m_nCentsRatio, m_CentEdgeRatio); //Dca 1.cm
+	    mh2HFT1PtCentPartEtaVzPhi[iCharge][iParticle][iEta][iVz][iPhi]  = new TH2F(Form("mh2HFT1PtCentPartEtaVzPhi_%d_%d_%d_%d", iParticle, iEta, iVz, iPhi), "mh2HFT1PtCent_"+m_ParticleName[iParticle]+Form("_Eta%2.1f_Vz%2.1f_Phi%2.1f;p_{T}(GeV/c);cent", m_EtaEdgeRatio[iEta], m_VzEdgeRatio[iVz], m_PhiEdgeRatio[iPhi]), m_nPtsRatio, m_PtEdgeRatio, m_nCentsRatio, m_CentEdgeRatio); //Dca 1.cm
+	  }
 	}
       }
     }
