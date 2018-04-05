@@ -66,11 +66,11 @@ int StPicoLcAnaMaker::MakeHF() {
 //	cout<<"start"<<endl;
   std::clock_t start1 = std::clock();//kvapil
   if (isMakerMode() == StPicoHFMaker::kWrite) {
-    createCandidates();
+    std::cout << "wrong version of the code. Please run in the " << StPicoHFMaker::kAnalyze << " mode" << std::endl;
   }
   else if (isMakerMode() == StPicoHFMaker::kRead) {
     // -- the reading back of the perviously written trees happens in the background
-    analyzeCandidates();
+    std::cout << "wrong version of the code. Please run in the " << StPicoHFMaker::kAnalyze << " mode" << std::endl;
   }
   else if (isMakerMode() == StPicoHFMaker::kAnalyze) {
     //createCandidates();
@@ -147,112 +147,6 @@ int StPicoLcAnaMaker::createQA(){
   return 0;
 }
 
-// _________________________________________________________
-int StPicoLcAnaMaker::createCandidates() {
-  // Creating candidates for D+- 3 body decay
-  // D+- -> K+2Pi decay
-
-  for (unsigned short idxPion1 = 0; idxPion1 < mIdxPicoPions.size(); ++idxPion1) {
-    StPicoTrack const *pion1 = mPicoDst->track(mIdxPicoPions[idxPion1]);
-    // -- Pion selection
-
-    for (unsigned short idxPion2 = idxPion1+1; idxPion2 < mIdxPicoPions.size(); ++idxPion2) {
-      StPicoTrack const *pion2 = mPicoDst->track(mIdxPicoPions[idxPion2]);
-      // -- Pion selection
-      if ( !isCloseTracks(pion1,pion2,mPrimVtx, mBField)) continue;
-
-      for (unsigned short idxKaon = 0; idxKaon < mIdxPicoKaons.size(); ++idxKaon) {
-	StPicoTrack const *kaon = mPicoDst->track(mIdxPicoKaons[idxKaon]);
-	// -- Kaon selection
-	// -- TOF
-	//if( !mHFCuts->isHybridTOFHadron(kaon, mHFCuts->getTofBetaBase(kaon), StHFCuts::kKaon) ) continue; //SL16d
-	if ( !mHFCuts->isHybridTOFHadron(kaon, mHFCuts->getTofBetaBase(kaon), StHFCuts::kKaon, mPrimVtx) ) continue; //SL16j, Vanek
-	if (mIdxPicoKaons[idxKaon] == mIdxPicoPions[idxPion1]|| mIdxPicoKaons[idxKaon] == mIdxPicoPions[idxPion2] || mIdxPicoPions[idxPion1] == mIdxPicoPions[idxPion2]) continue;
-	if ( !isCloseTracks(pion1,kaon,mPrimVtx, mBField)) continue;
-	if ( !isCloseTracks(kaon,pion2,mPrimVtx, mBField)) continue;
-	// -- Making triplet
-	StHFTriplet triplet(pion1,pion2,kaon,mHFCuts->getHypotheticalMass(StHFCuts::kPion),mHFCuts->getHypotheticalMass(StHFCuts::kPion),mHFCuts->getHypotheticalMass(StHFCuts::kKaon), mIdxPicoPions[idxPion1],mIdxPicoPions[idxPion2],mIdxPicoKaons[idxKaon], mPrimVtx, mBField);
-	if(mHFCuts->hasGoodTripletdV0Max(triplet)) continue;
-	if (!mHFCuts->isGoodSecondaryVertexTriplet(triplet)) continue;
-	mPicoHFEvent->addHFSecondaryVertexTriplet(&triplet);
-
-      }  // for (unsigned short idxKaon = 0; idxKaon < mIdxPicoKaons.size(); ++idxKaon)
-    } // for (unsigned short idxPion2 = idxPion1+1; idxPion2 < mIdxPicoPions.size(); ++idxPion2)
-  } // for (unsigned short idxPion1 = 0; idxPion1 < mIdxPicoPions.size(); ++idxPion1)
-  return kStOK;
-}
-
-// _________________________________________________________
-int StPicoLcAnaMaker::analyzeCandidates() {
-
-  // --- Analyze previously constructed candidates and output to ntuple
-  // -- Decay channel1
-  TClonesArray const * aCandidates= mPicoHFEvent->aHFSecondaryVertices();
-//	cout<<"RefMultInit3"<<endl;
-  mRefmultCorrUtil->init(mPicoDst->event()->runId());
-  if (!mRefmultCorrUtil){
-    LOG_WARN << " No mGRefMultCorrUtil! Skip! " << endl;
-    return kStWarn;
-  }
-  //	cout<<"RefMultInit4"<<endl;
-
-  if (mRefmultCorrUtil->isBadRun(mPicoDst->event()->runId())) return kStOK;
-
-  mRefmultCorrUtil->initEvent(mPicoDst->event()->grefMult(), mPrimVtx.z(), mPicoDst->event()->ZDCx()) ;
-
-  int const centrality = mRefmultCorrUtil->getCentralityBin9();
-  const double reweight = mRefmultCorrUtil->getWeight();
-  const double refmultCor = mRefmultCorrUtil->getRefMultCorr();
-
-
-  if( mPicoHFEvent->nHFSecondaryVertices() >0 ){
-    for (unsigned int idx = 0; idx <  mPicoHFEvent->nHFSecondaryVertices(); ++idx) {
-
-      StHFTriplet const* triplet = static_cast<StHFTriplet*>(aCandidates->At(idx));
-      StPicoTrack const* pion1 = mPicoDst->track(triplet->particle1Idx());
-      StPicoTrack const* pion2 = mPicoDst->track(triplet->particle2Idx());
-      StPicoTrack const* kaon = mPicoDst->track(triplet->particle3Idx());
-
-      // Greates distance between tracks
-      float const dcaDaughters_12 = triplet->dcaDaughters12();
-      float const dcaDaughters_23 = triplet->dcaDaughters23();
-      float const dcaDaughters_13 = triplet->dcaDaughters31();
-      float dcaMax = dcaDaughters_12 > dcaDaughters_13 ? dcaDaughters_12 : dcaDaughters_13;
-      dcaMax = dcaMax > dcaDaughters_23 ? dcaMax : dcaDaughters_23;
-
-      //TOF ---
-      float kaonBetaBase = -1;
-      float pion1BetaBase = -1;
-      float pion2BetaBase = -1;
-
-      kaonBetaBase = mHFCuts->getTofBetaBase(kaon); //SL16j, Vanek
-      pion1BetaBase = mHFCuts->getTofBetaBase(pion1);
-      pion2BetaBase = mHFCuts->getTofBetaBase(pion2);
-
-      //update Vanek
-      float kaonTOFinvbeta = fabs(1. / kaonBetaBase - sqrt(1+M_KAON_PLUS*M_KAON_PLUS/(kaon->gMom(mPrimVtx,mBField).mag()*kaon->gMom(mPrimVtx,mBField).mag())));
-      float pion1TOFinvbeta = fabs(1. / pion1BetaBase - sqrt(1+M_PION_PLUS*M_PION_PLUS/(pion1->gMom(mPrimVtx,mBField).mag()*pion1->gMom(mPrimVtx,mBField).mag())));
-      float pion2TOFinvbeta = fabs(1. / pion2BetaBase - sqrt(1+M_PION_PLUS*M_PION_PLUS/(pion2->gMom(mPrimVtx,mBField).mag()*pion2->gMom(mPrimVtx,mBField).mag())));
-
-      // -- Flag D plus and Dminus
-      flag = -99;
-      if( kaon->charge()<0 && pion1->charge()>0 && pion2->charge()>0 ) flag=0; // -- D+ -> K- + 2pi+
-      if( kaon->charge()>0 && pion1->charge()<0 && pion2->charge()<0 ) flag=1; // -- D- -> K+ + 2pi-
-
-      if( kaon->charge()<0 && pion1->charge()>0 && pion2->charge()<0 ) flag=2; // -+-
-      if( kaon->charge()<0 && pion1->charge()<0 && pion2->charge()>0 ) flag=2; // --+
-      if( kaon->charge()>0 && pion1->charge()>0 && pion2->charge()<0 ) flag=3; // ++-
-      if( kaon->charge()>0 && pion1->charge()<0 && pion2->charge()>0 ) flag=3; // +-+
-
-      if( kaon->charge()<0 && pion1->charge()<0 && pion2->charge()<0 ) flag=4; // ---
-      if( kaon->charge()>0 && pion1->charge()>0 && pion2->charge()>0 ) flag=5; // +++
-
-      // getting centrality
-    } // for (unsigned int idx = 0; idx <  mPicoHFEvent->nHFSecondaryVertices(); ++idx) {
-  }
-
-  return kStOK;
-}
 
 // _________________________________________________________
 bool StPicoLcAnaMaker::isHadron(StPicoTrack const * const trk, int pidFlag) const {

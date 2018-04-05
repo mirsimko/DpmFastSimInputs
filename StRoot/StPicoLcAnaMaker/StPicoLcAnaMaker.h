@@ -148,11 +148,6 @@ protected:
   virtual bool isProton(StPicoTrack const*) const;
 
 private:
-  int createCandidates();
-  int analyzeCandidates();
-
-
-
   // -- private members --------------------------
 
   unsigned int mDecayChannel;
@@ -239,8 +234,6 @@ private:
 
   //centrality, refMult
   Float_t mcentrality, refmult, mrefmultcorr, mreweight;
-
-
 
   //-------------------------------------------------
   // -- ADD USER MEMBERS HERE -------------------
