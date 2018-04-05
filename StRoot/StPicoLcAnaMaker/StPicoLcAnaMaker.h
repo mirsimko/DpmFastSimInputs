@@ -104,10 +104,10 @@ public:
 		    char const* inputHFListHFtree);
   virtual ~StPicoLcAnaMaker();
 
-  virtual Int_t InitHF();
-  virtual Int_t MakeHF();
+  virtual int InitHF();
+  virtual int MakeHF();
   virtual void  ClearHF(Option_t *opt);
-  virtual Int_t FinishHF();
+  virtual int FinishHF();
   // -- Lomnitz: Added this cut funtions to to filter iwthout having to make pairs
   virtual bool isCloseTracks(StPicoTrack const*, StPicoTrack const*,StThreeVectorF const & , float) const;
   virtual double DCA(StPicoTrack const*, StThreeVectorF const &) const;
@@ -178,7 +178,8 @@ private:
     m_nVzsRatio = 6,
     m_nCentsRatio = 10,
     m_nPtsRatio = 36,
-    m_nDcasDca = 144
+    m_nDcasDca = 144,
+    m_ncharges = 2
   };
   //-----------------------------------
 
@@ -195,8 +196,8 @@ private:
   TH2F* mh2Tpc1PhiVz;
   TH2F* mh2HFT1PtCent;
   TH2F* mh2HFT1PhiVz;
-  TH2F* mh2Tpc1PtCentPartEtaVzPhi[m_nParticles][m_nEtasRatio][m_nVzsRatio][m_nPhisRatio];
-  TH2F* mh2HFT1PtCentPartEtaVzPhi[m_nParticles][m_nEtasRatio][m_nVzsRatio][m_nPhisRatio];
+  TH2F* mh2Tpc1PtCentPartEtaVzPhi[m_ncharges][m_nParticles][m_nEtasRatio][m_nVzsRatio][m_nPhisRatio];
+  TH2F* mh2HFT1PtCentPartEtaVzPhi[m_ncharges][m_nParticles][m_nEtasRatio][m_nVzsRatio][m_nPhisRatio];
 
   //HFT Dca
   TH3F* mh3DcaXyZPtCentPartEtaVzPhi[m_nParticles][m_nEtasDca][m_nVzsDca][m_nCentsDca];
@@ -207,33 +208,34 @@ private:
 
   //---Variables for TTree---------------------------
   //Pion1
-  Int_t pi1_runId, pi1_eventId;
-  Float_t pi1_phi, pi1_eta, pi1_pt, pi1_dca, pi1_dedx, pi1_nSigma;
-  Int_t pi1_nHitFit, pi1_nHitdedx;
-  Float_t pi1_TOFinvbeta, pi1_betaBase;
+  int pi1_runId, pi1_eventId;
+  float pi1_phi, pi1_eta, pi1_pt, pi1_dca, pi1_dedx, pi1_nSigma;
+  int pi1_nHitFit, pi1_nHitdedx;
+  float pi1_TOFinvbeta, pi1_betaBase;
 
   //Pion2
-  Int_t pi2_runId, pi2_eventId;
-  Float_t pi2_phi, pi2_eta, pi2_pt, pi2_dca, pi2_dedx, pi2_nSigma;
-  Int_t pi2_nHitFit, pi2_nHitdedx;
-  Float_t pi2_TOFinvbeta, pi2_betaBase;
+  int pi2_runId, pi2_eventId;
+  float pi2_phi, pi2_eta, pi2_pt, pi2_dca, pi2_dedx, pi2_nSigma;
+  int pi2_nHitFit, pi2_nHitdedx;
+  float pi2_TOFinvbeta, pi2_betaBase;
 
   //Kaon
-  Int_t k_runId, k_eventId;
-  Float_t k_phi, k_eta, k_pt, k_dca, k_dedx, k_nSigma;
-  Int_t k_nHitFit, k_nHitdedx;
-  Float_t k_TOFinvbeta, k_betaBase;
+  int k_runId, k_eventId;
+  float k_phi, k_eta, k_pt, k_dca, k_dedx, k_nSigma;
+  int k_nHitFit, k_nHitdedx;
+  float k_TOFinvbeta, k_betaBase;
 
   //dca, flag, prim. vertex
-  Float_t mdcaMax;
-  Int_t flag;
-  Float_t primVz;
+  int mcharge;
+  float mdcaMax;
+  int flag;
+  float primVz;
 
   //D meson
-  Float_t D_theta, D_decayL, D_phi, D_eta, D_pt, D_mass, D_dV0Max;
+  float D_theta, D_decayL, D_phi, D_eta, D_pt, D_mass, D_dV0Max;
 
   //centrality, refMult
-  Float_t mcentrality, refmult, mrefmultcorr, mreweight;
+  float mcentrality, refmult, mrefmultcorr, mreweight;
 
   //-------------------------------------------------
   // -- ADD USER MEMBERS HERE -------------------

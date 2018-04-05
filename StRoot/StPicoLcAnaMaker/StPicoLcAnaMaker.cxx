@@ -26,10 +26,10 @@ int StPicoLcAnaMaker::InitHF() {
   // -- INITIALIZE USER HISTOGRAMS ETC HERE -------------------
   //    add them to the output list mOutList which is automatically written
 
-  cout<<"InitHF1"<<endl;
+  // cout<<"InitHF1"<<endl;
   mOutFileBaseName = mOutFileBaseName.ReplaceAll(".root", "");
   histoInit(mOutFileBaseName, true); //for createQA()
-  cout<<"InitHF2"<<endl;
+  // cout<<"InitHF2"<<endl;
   //	cout<<"RefMult1"<<endl;
   mRefmultCorrUtil->setVzForWeight(6, -6.0, 6.0);
   cout<<"RefMult1"<<endl;
@@ -65,19 +65,14 @@ int StPicoLcAnaMaker::MakeHF() {
   //     - analyzeCandidates()
 //	cout<<"start"<<endl;
   std::clock_t start1 = std::clock();//kvapil
-  if (isMakerMode() == StPicoHFMaker::kWrite) {
-    std::cout << "wrong version of the code. Please run in the " << StPicoHFMaker::kAnalyze << " mode" << std::endl;
-  }
-  else if (isMakerMode() == StPicoHFMaker::kRead) {
-    // -- the reading back of the perviously written trees happens in the background
-    std::cout << "wrong version of the code. Please run in the " << StPicoHFMaker::kAnalyze << " mode" << std::endl;
+  if (isMakerMode() != StPicoHFMaker::kAnalyze) {
+    std::cerr << "wrong version of the code. Please run in the " << StPicoHFMaker::kAnalyze << " mode" << std::endl;
   }
   else if (isMakerMode() == StPicoHFMaker::kAnalyze) {
     //createCandidates();
     //analyzeCandidates();
     createQA();
   }
-
 
   return kStOK;
 }
@@ -97,7 +92,7 @@ int StPicoLcAnaMaker::createQA(){
   const double reweight = mRefmultCorrUtil->getWeight();
   const double refmultCor = mRefmultCorrUtil->getRefMultCorr();
   //mHists->addCent(refmultCor, centrality, reweight, pVtx.z());
-  UInt_t nTracks = mPicoDst->numberOfTracks();
+  unsigned int nTracks = mPicoDst->numberOfTracks();
 
   for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack)
   {
