@@ -124,7 +124,7 @@ public:
   //  float getTofBeta(StPicoTrack const*,StThreeVectorF const& vtx) const;
 
   void histoInit(TString fileBaseName,bool fillQaHists=true);
-  void addTpcDenom1(bool IsPion, bool IsKaon, bool IsProton, float pt, int centrality, float Eta, float Phi, float Vz);
+  void addTpcDenom1(int charge, bool IsPion, bool IsKaon, bool IsProton, float pt, int centrality, float Eta, float Phi, float Vz);
   void addHFTNumer1(bool IsPion, bool IsKaon, bool IsProton, float pt, int centrality, float Eta, float Phi, float Vz);
   void addDcaPtCent(float dca, float dcaXy, float  dcaZ, bool IsPion, bool IsKaon, bool IsProton, float pt,  int centrality, float Eta, float Phi, float Vz);
   int getEtaIndexDca(float Eta) ;
