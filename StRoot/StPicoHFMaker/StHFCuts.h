@@ -21,7 +21,7 @@
  */
 
 #include "StPicoCutsBase/StPicoCutsBase.h"
-#include "StPicoEvent/StPicoTrack.h"
+#include "StPicoDstMaker/StPicoTrack.h"
 #include "StHFPair.h"
 #include "StHFTriplet.h"
 

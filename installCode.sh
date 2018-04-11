@@ -29,6 +29,7 @@ echo '###############################'
 git clone git@github.com:mirsimko/auau200GeVRun14and16.git
 pushd StRoot >> /dev/null
 ln -s ../auau200GeVRun14and16/StRoot/StPicoCutsBase/
+ln -s ../auau200GeVRun14and16/StRoot/StPicoPrescales/
 mkdir StPicoHFMaker
 pushd StPicoHFMaker >> /dev/null
 StPicoHFMakerDir="../../auau200GeVRun14and16/StRoot/StPicoHFMaker/"
