@@ -266,7 +266,7 @@ void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *output
   //if(nEvents>total) nEvents = total;
 
   // -- take the smaller of the user-defined or all available events
-  nEvents = nEvents < numberOfEvents ? nEvents : numberOfEventsToRun; 
+  nEvents = nEvents < numberOfEventsToRun ? nEvents : numberOfEventsToRun; 
 
   for (Int_t i=0; i<nEvents; i++) {
     if(i%10000==0)
