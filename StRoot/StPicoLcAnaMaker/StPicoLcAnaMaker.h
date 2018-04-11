@@ -109,8 +109,6 @@ public:
   virtual int MakeHF();
   virtual void  ClearHF(Option_t *opt);
   virtual int FinishHF();
-  // -- Lomnitz: Added this cut funtions to to filter iwthout having to make pairs
-  virtual bool isCloseTracks(StPicoTrack const*, StPicoTrack const*,StThreeVectorF const & , float) const;
   virtual double DCA(StPicoTrack const*, StThreeVectorF const &) const;
   int createQA();
 
