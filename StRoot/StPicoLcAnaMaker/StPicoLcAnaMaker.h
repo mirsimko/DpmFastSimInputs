@@ -100,8 +100,9 @@ class StRefMultCorr;
 class StPicoLcAnaMaker : public StPicoHFMaker 
 {
 public:
-  StPicoLcAnaMaker(char const* name, StPicoDstMaker* picoMaker, char const* outputBaseFileName,  
-		    char const* inputHFListHFtree);
+  StPicoLcAnaMaker(char const* name, StPicoDstMaker* picoMaker, int LcCharge, 
+		   char const* outputBaseFileName = "testPicoLcAnaMaker",  
+		   char const* inputHFListHFtree = "");
   virtual ~StPicoLcAnaMaker();
 
   virtual int InitHF();
@@ -150,20 +151,6 @@ protected:
 private:
   // -- private members --------------------------
 
-  unsigned int mDecayChannel;
-
-  // -- ADD USER MEMBERS HERE ------------------- 
-  //TNtuple *ntp_DMeson; //orig. Kvapil
-  TTree *ntp_Dmeson; //Vanek
-
-  StRefMultCorr* mRefmultCorrUtil;
-  int mRunNumber;
-
-  TString mOutFileBaseName;
-
-  bool mFillQaHists;
-  TFile* mOutFile;
-
   //Cuts consts: trick with enum-----
   enum cutsConsts{
     m_nParticles = 3,
@@ -181,6 +168,23 @@ private:
     m_ncharges = 2
   };
   //-----------------------------------
+
+  unsigned int mDecayChannel;
+
+  // -- ADD USER MEMBERS HERE ------------------- 
+  //TNtuple *ntp_DMeson; //orig. Kvapil
+  TTree *ntp_Dmeson; //Vanek
+
+  StRefMultCorr* mRefmultCorrUtil;
+  int mRunNumber;
+
+  int mLambdaCCharge;
+  int mPartCharge[StPicoCutsBase::kPicoPIDMax];
+
+  TString mOutFileBaseName;
+
+  bool mFillQaHists;
+  TFile* mOutFile;
 
   TH1F* mh1Cent;
   TH1F* mh1CentWg;
