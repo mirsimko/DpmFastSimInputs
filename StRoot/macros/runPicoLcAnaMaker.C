@@ -84,6 +84,9 @@ void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *output
   loadSharedHFLibraries();
 #endif
 
+  const long numberOfEventsToRun = 1e4;
+  if (numberOfEventsToRun < 1e7)
+    cerr << "Warning: number of events < 1e7" << endl;
 
   chain = new StChain();
 
@@ -258,9 +261,12 @@ void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *output
   //clock_t start = clock(); // getting starting time
   chain->Init();
   cout << "chain->Init();" << endl;
-  int nEvents = picoDstMaker->chain()->GetEntries();
+  long nEvents = picoDstMaker->chain()->GetEntries();
   cout << " Total entries = " << nEvents << endl;
   //if(nEvents>total) nEvents = total;
+
+  // -- take the smaller of the user-defined or all available events
+  nEvents = nEvents < numberOfEvents ? nEvents : numberOfEventsToRun; 
 
   for (Int_t i=0; i<nEvents; i++) {
     if(i%10000==0)
