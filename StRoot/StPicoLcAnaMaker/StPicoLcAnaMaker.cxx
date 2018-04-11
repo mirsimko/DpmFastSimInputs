@@ -183,7 +183,7 @@ double StPicoLcAnaMaker::DCA(StPicoTrack const * const trk, StThreeVectorF const
   // -- particle DCA
   StPhysicalHelixD helix = trk->helix(mBField);
   helix.moveOrigin(helix.pathLength(vtx));
-  return ((helix->origin() - vtx).mag());
+  return ((helix.origin() - vtx).mag());
 }
 
 //-----------------------------------------------------------------------------
