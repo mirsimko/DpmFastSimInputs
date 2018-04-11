@@ -64,7 +64,7 @@ StChain *chain;
 void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *outputFile="outputBaseName",
 		       const unsigned int makerMode = 0 /*kAnalyze*/,
 		       const Char_t *badRunListFileName = "picoList_bad_MB.list", const Char_t *treeName = "picoHFtree",
-		       const Char_t *productionBasePath = "/star/data100/reco/AuAu_200_production_2016/ReversedFullField/P16ij/2016",
+		       const Char_t *productionBasePath = "/project/projectdirs/starprod/picodsts/Run14/AuAu/200GeV/physics2/P16id",
 		       const unsigned int decayChannel = 0 /* kChannel0 */,
 		       const int LcCharge = 1) {
   // -- Check STAR Library. Please set SL_version to the original star library used in the production
