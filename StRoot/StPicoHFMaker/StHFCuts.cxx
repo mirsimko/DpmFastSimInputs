@@ -6,7 +6,7 @@
 #include "StHFClosePair.h"
 #include "StHFTriplet.h"
 
-#include "StPicoEvent/StPicoTrack.h" //Vanek
+#include "StPicoDstMaker/StPicoTrack.h" //Vanek
 
 ClassImp(StHFCuts)
 
