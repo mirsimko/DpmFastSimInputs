@@ -1,17 +1,28 @@
 #include "StPicoLcAnaMaker.h"
 //#include "StPicoHFMaker/StHFCuts.h"
 #include <iostream>
+#include <cmath>
 
 ClassImp(StPicoLcAnaMaker)
 
 using namespace std;
 
 // _________________________________________________________
-StPicoLcAnaMaker::StPicoLcAnaMaker(char const* name, StPicoDstMaker* picoMaker, char const* outputBaseFileName,
-				   char const* inputHFListHFtree = "") :
+StPicoLcAnaMaker::StPicoLcAnaMaker(char const* name, StPicoDstMaker* picoMaker, int LcCharge, 
+				   char const* outputBaseFileName,
+				   char const* inputHFListHFtree) :
   StPicoHFMaker(name, picoMaker, outputBaseFileName, inputHFListHFtree),
-  mDecayChannel(kChannel1), mRefmultCorrUtil(NULL),mOutFileBaseName(outputBaseFileName){
+  mDecayChannel(kChannel1), mRefmultCorrUtil(NULL), mLambdaCCharge(LcCharge), 
+  mOutFileBaseName(outputBaseFileName){
 
+  if (abs(LcCharge) != 1)
+  {
+    cerr << " StPicoLcAnaMaker::StPicoLcAnaMaker: Unexpected charge of LambdaC. You have entered: " << LcCharge << endl;
+    return;
+  }
+  mPartCharge[StPicoCutsBase::kPion] = LcCharge;
+  mPartCharge[StPicoCutsBase::kKaon] = -LcCharge;
+  mPartCharge[StPicoCutsBase::kProton] = LcCharge;
 
   // constructor
 }
@@ -100,6 +111,7 @@ int StPicoLcAnaMaker::createQA(){
     if (!trk) continue;
     //StPhysicalHelixD helix = trk->helix(); //SL16d
     StPhysicalHelixD helix = trk->helix(mPicoDst->event()->bField()); //SL16j, Vanek
+    helix.moveOrigin(helix.pathLength(mPrimVtx));
     float dca = float(helix.geometricSignedDistance(mPrimVtx));
     StThreeVectorF momentum = trk->gMom(mPrimVtx, mPicoDst->event()->bField());
 
@@ -131,7 +143,6 @@ int StPicoLcAnaMaker::createQA(){
       addDcaPtCent(dca, dcaXy, dcaZ, goodPion, goodKaon, goodProton, momentum.perp(), centrality, momentum.pseudoRapidity(), momentum.phi(), mPrimVtx.z()); //add Dca distribution
     }
 
-    const int charge = trk->charge();
     if (trk  && fabs(dca) < mHFCuts->cutDca() && (goodPion || goodKaon || goodProton)){
       //std::cout<<"1: "<<goodPion<<" "<< goodKaon<<" "<<  goodProton<<" "<<  momentum.perp()<<" "<<  centrality<<" "<<  momentum.pseudoRapidity()<<" "<<  momentum.phi()<<" "<<  mPrimVtx.z()<<std::endl;
       addTpcDenom1(goodPion, goodKaon, goodProton, momentum.perp(), centrality, momentum.pseudoRapidity(), momentum.phi(), mPrimVtx.z()); //Dca cut on 1.5cm, add Tpc Denominator
@@ -147,35 +158,30 @@ int StPicoLcAnaMaker::createQA(){
 // _________________________________________________________
 bool StPicoLcAnaMaker::isHadron(StPicoTrack const * const trk, int pidFlag) const {
   // -- good hadron
-  return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCHadron(trk, pidFlag));
+  StThreeVectorF t = trk->pMom();
+  if (fabs(t.pseudoRapidity()) > 1.) return false; //pridano fabs 1212
+  //if (!mHFCuts->isHybridTOFHadron(trk, mHFCuts->getTofBetaBase(trk), StHFCuts::kPion) ) return false; //SL16d
+  if (!mHFCuts->isHybridTOFHadron(trk, mHFCuts->getTofBetaBase(trk), pidFlag, mPrimVtx) ) return false; //SL16j, Vanek
+  if (!mHFCuts->cutMinDcaToPrimVertex(trk, pidFlag)) return false;
+  return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCHadron(trk, pidFlag) && trk->charge() == mPartCharge[pidFlag]);
 }
 
 // _________________________________________________________
 bool StPicoLcAnaMaker::isPion(StPicoTrack const * const trk) const {
   // -- good pion
-  StThreeVectorF t = trk->pMom();
-  if (fabs(t.pseudoRapidity()) > 1.) return false; //pridano fabs 1212
-  //if (!mHFCuts->isHybridTOFHadron(trk, mHFCuts->getTofBetaBase(trk), StHFCuts::kPion) ) return false; //SL16d
-  if (!mHFCuts->isHybridTOFHadron(trk, mHFCuts->getTofBetaBase(trk), StHFCuts::kPion, mPrimVtx) ) return false; //SL16j, Vanek
-  if (!mHFCuts->cutMinDcaToPrimVertex(trk, StPicoCutsBase::kPion)) return false;
-  return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCHadron(trk, StPicoCutsBase::kPion));
+  return isHadron(trk, StPicoCutsBase::kPion);
 }
 
 // _________________________________________________________
 bool StPicoLcAnaMaker::isKaon(StPicoTrack const * const trk) const {
   // -- good kaon
-  StThreeVectorF t = trk->pMom();
-  if (fabs(t.pseudoRapidity()) > 1.) return false;//pridano fabs 1212
-  //if (!mHFCuts->isHybridTOFHadron(trk, mHFCuts->getTofBetaBase(trk), StHFCuts::kKaon) ) return false; //SL16d
-  if (!mHFCuts->isHybridTOFHadron(trk, mHFCuts->getTofBetaBase(trk), StHFCuts::kKaon, mPrimVtx) ) return false; //SL16j, Vanek
-  if (!mHFCuts->cutMinDcaToPrimVertex(trk, StPicoCutsBase::kKaon)) return false;
-  return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCHadron(trk, StPicoCutsBase::kKaon));
+  return isHadron(trk, StPicoCutsBase::kKaon);
 }
 
 // _________________________________________________________
 bool StPicoLcAnaMaker::isProton(StPicoTrack const * const trk) const {
   // -- good proton
-  return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCHadron(trk, StPicoCutsBase::kProton));
+  return isHadron(trk, StPicoCutsBase::kProton);
 }
 
 // _________________________________________________________
