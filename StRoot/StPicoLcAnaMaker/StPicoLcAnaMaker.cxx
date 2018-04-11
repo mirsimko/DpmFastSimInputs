@@ -434,17 +434,16 @@ void StPicoLcAnaMaker::closeFile()
   }
   // std::cout<<"tuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"<<m_nParticles<<" "<<m_nEtasRatio<<std::endl;
 //cout<<"CloseFile4"<<endl;
-    for (int iParticle = 0; iParticle < m_nParticles; iParticle++)
+  for (int iParticle = 0; iParticle < m_nParticles; iParticle++)
+  {
+    for (int iEta = 0; iEta < m_nEtasRatio; iEta++)
     {
-      for (int iEta = 0; iEta < m_nEtasRatio; iEta++)
+      for (int iVz = 0; iVz < m_nVzsRatio; iVz++)
       {
-	for (int iVz = 0; iVz < m_nVzsRatio; iVz++)
+	for (int iPhi = 0; iPhi < m_nPhisRatio; iPhi++)
 	{
-	  for (int iPhi = 0; iPhi < m_nPhisRatio; iPhi++)
-	  {
-	    mh2Tpc1PtCentPartEtaVzPhi[iParticle][iEta][iVz][iPhi]->Write();
-	    mh2HFT1PtCentPartEtaVzPhi[iParticle][iEta][iVz][iPhi]->Write();
-	  }
+	  mh2Tpc1PtCentPartEtaVzPhi[iParticle][iEta][iVz][iPhi]->Write();
+	  mh2HFT1PtCentPartEtaVzPhi[iParticle][iEta][iVz][iPhi]->Write();
 	}
       }
     }
