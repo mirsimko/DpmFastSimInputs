@@ -178,29 +178,12 @@ bool StPicoLcAnaMaker::isProton(StPicoTrack const * const trk) const {
   return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCHadron(trk, StPicoCutsBase::kProton));
 }
 
+// _________________________________________________________
 double StPicoLcAnaMaker::DCA(StPicoTrack const * const trk, StThreeVectorF const & vtx) const {
   // -- particle DCA
-  return ((trk->origin() - vtx).mag()); //SL16j, Vanek
-}
-
-
-bool StPicoLcAnaMaker::isCloseTracks(StPicoTrack const * const trk1, StPicoTrack const * const trk2, StThreeVectorF const & vtx, float bField) const {
-  if( ( trk1->origin()-vtx ).mag()>0.2 || ( trk2->origin()-vtx ).mag()>0.2 ) return false; //SL16j, Vanek
-
-  //Requires loading constants
-
-  StThreeVectorF const p1Mom = trk1->gMom(); //SL16j, Vanek
-  StThreeVectorF const p2Mom = trk2->gMom();
-  StPhysicalHelixD const p1StraightLine(p1Mom, trk1->origin(), 0, trk1->charge());
-  StPhysicalHelixD const p2StraightLine(p2Mom, trk2->origin(), 0, trk2->charge());
-  //DCA
-  pair<double, double> const ss = p1StraightLine.pathLengths(p2StraightLine);
-  StThreeVectorF const p1AtDcaToP2 = p1StraightLine.at(ss.first);
-  StThreeVectorF const p2AtDcaToP1 = p2StraightLine.at(ss.second);
-  float const dca = (p1AtDcaToP2-p2AtDcaToP1).mag();
-  if(dca > 0.009) return false;
-  // -- good pair
-  return true;
+  StPhysicalHelixD helix = trk->helix(mBField);
+  helix.moveOrigin(helix.pathLength(vtx));
+  return ((helix->origin() - vtx).mag());
 }
 
 //-----------------------------------------------------------------------------
