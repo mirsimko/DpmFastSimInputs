@@ -18,9 +18,9 @@ void loadSharedHFLibraries() {
   gSystem->Load("StPicoHFMaker");
   gSystem->Load("StPicoHFMyAnaMaker");
   gSystem->Load("StRefMultCorr");
-  cout << " loading of shared HF libraries are done" << endl;
 
   // -->>> ADD your own library/class HERE 
   gSystem->Load( "StPicoLcAnaMaker" );
+  cout << " loading of shared HF libraries is done" << endl;
 
  }
