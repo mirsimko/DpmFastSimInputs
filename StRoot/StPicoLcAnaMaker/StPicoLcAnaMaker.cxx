@@ -128,9 +128,10 @@ int StPicoLcAnaMaker::createQA(){
     bool tpcPion = false;
     bool tpcKaon = false;
     bool tpcProton = false;
-    if(mHFCuts->hasGoodNSigmaHist(trk, StPicoCutsBase::kPion)) tpcPion = true;
-    if(mHFCuts->hasGoodNSigmaHist(trk, StPicoCutsBase::kKaon)) tpcKaon = true;
-    if(mHFCuts->hasGoodNSigmaHist(trk, StPicoCutsBase::kProton)) tpcProton = true;
+    const int charge = trk->charge();
+    if(mHFCuts->hasGoodNSigmaHist(trk, StPicoCutsBase::kPion) && charge == mPartCharge[StPicoCutsBase::kPion]) tpcPion = true;
+    if(mHFCuts->hasGoodNSigmaHist(trk, StPicoCutsBase::kKaon) && charge == mPartCharge[StPicoCutsBase::kKaon]) tpcKaon = true;
+    if(mHFCuts->hasGoodNSigmaHist(trk, StPicoCutsBase::kProton) && charge == mPartCharge[StPicoCutsBase::kProton]) tpcProton = true;
     //float hBeta = mHFCuts->getTofBetaBase(trk); //SL16d
     float hBeta = mHFCuts->getTofBetaBase(trk); //SL16j, Vanek
     bool hTofAvailable = !isnan(hBeta) && hBeta > 0;
