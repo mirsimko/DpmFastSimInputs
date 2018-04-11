@@ -234,6 +234,8 @@ void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *output
   // set refmultCorr
   //  cout<<"test"<<endl;
   StRefMultCorr* grefmultCorrUtil = CentralityMaker::instance()->getgRefMultCorr_P16id(); //new StRefMultCorr, info about Run16, SL16j in the same file as for Run14, SL16d
+  grefmultCorrUtil->setVzForWeight(6, -6.0, 6.0);
+  grefmultCorrUtil->readScaleForWeight("StRoot/StRefMultCorr/macros/weight_grefmult_vpd30_vpd5_Run14.txt");
   picoLcAnaMaker->setRefMutCorr(grefmultCorrUtil);
   //cout<<"test2"<<endl;
   // ========================================================================================

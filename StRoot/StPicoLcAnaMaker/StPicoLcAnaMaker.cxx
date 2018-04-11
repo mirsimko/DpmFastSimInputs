@@ -40,12 +40,6 @@ int StPicoLcAnaMaker::InitHF() {
   // cout<<"InitHF1"<<endl;
   mOutFileBaseName = mOutFileBaseName.ReplaceAll(".root", "");
   histoInit(mOutFileBaseName, true); //for createQA()
-  // cout<<"InitHF2"<<endl;
-  //	cout<<"RefMult1"<<endl;
-  mRefmultCorrUtil->setVzForWeight(6, -6.0, 6.0);
-  cout<<"RefMult1"<<endl;
-  mRefmultCorrUtil->readScaleForWeight("StRoot/StRefMultCorr/macros/weight_grefmult_VpdnoVtx_Vpd5_Run16.txt"); //for new StRefMultCorr, Run16, SL16j
-  cout<<"RefMult2"<<endl;
 
   // -------------- USER VARIABLES -------------------------
 
