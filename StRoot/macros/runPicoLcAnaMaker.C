@@ -69,7 +69,7 @@ void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *output
 		       const int LcCharge = 1) {
   // -- Check STAR Library. Please set SL_version to the original star library used in the production
   //    from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
-  string SL_version = "SL16j"; //new: SL16d -> SL16j
+  string SL_version = "SL16d";
   string env_SL = getenv ("STAR");
   if (env_SL.find(SL_version)==string::npos) {
       cout<<"Environment Star Library does not match the requested library in runPicoHFMyAnaMaker.C. Exiting..."<<endl;
@@ -156,34 +156,20 @@ void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *output
 
   hfCuts->setCutVzMax(6.);
   hfCuts->setCutVzVpdVzMax(3.);
-/* SL16d triggers
+/* SL16d triggers */
   hfCuts->addTriggerId(450050);    // vpdmb-5-p-nobsmd-hlt
   hfCuts->addTriggerId(450060);    // vpdmb-5-p-nobsmd-hlt
   hfCuts->addTriggerId(450005);    // vpdmb-5-p-nobsmd
   hfCuts->addTriggerId(450015);    // vpdmb-5-p-nobsmd
   hfCuts->addTriggerId(450025);    // vpdmb-5-p-nobsmd
-*/
-	//SL16j triggers
-  hfCuts->addTriggerId(520802);    // VPDMB-5-p-hlt
-  hfCuts->addTriggerId(520812);    // VPDMB-5-p-hlt
-  hfCuts->addTriggerId(520822);    // VPDMB-5-p-hlt
-  hfCuts->addTriggerId(520832);    // VPDMB-5-p-hlt
-  hfCuts->addTriggerId(520842);    // VPDMB-5-p-hlt
-
-	hfCuts->addTriggerId(520001);    // VPDMB-5-p-sst
-  hfCuts->addTriggerId(520011);    // VPDMB-5-p-sst
-  hfCuts->addTriggerId(520021);    // VPDMB-5-p-sst
-  hfCuts->addTriggerId(520031);    // VPDMB-5-p-sst
-  hfCuts->addTriggerId(520041);    // VPDMB-5-p-sst
-  hfCuts->addTriggerId(520051);    // VPDMB-5-p-sst
 
   hfCuts->setCutNHitsFitMin(15); //kvapil 20 to 15, for candidates
-	hfCuts->setCutNHitsFitMinHist(20); //for histograms, Vanek
+  hfCuts->setCutNHitsFitMinHist(20); //for histograms, Vanek
   hfCuts->setCutRequireHFT(true);
 
-	hfCuts->setCutDca(1.5); //for QA, see createQA() in StPicoLcAnaMaker.cxx
-	hfCuts->setCutDcaXy(1.); //used in Kvapil's version, not used in Vanek's version
-	hfCuts->setCutDcaZ(1.);
+  hfCuts->setCutDca(1.5); //for QA, see createQA() in StPicoLcAnaMaker.cxx
+  hfCuts->setCutDcaXy(1.); //used in Kvapil's version, not used in Vanek's version
+  hfCuts->setCutDcaZ(1.);
 
   hfCuts->setCutDcaMin(0.009,StHFCuts::kPion); //federic 1aug2016
   //hfCuts->setCutDcaMin(0.01,StHFCuts::kKaon); //federic 1aug2016
