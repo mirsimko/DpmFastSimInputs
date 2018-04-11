@@ -46,8 +46,7 @@ echo
 echo '###############################'
 echo installing refMultCorr
 echo '###############################'
-cp -r ~/StRefMultCorr.tar .
-tar xzf StRefMultCorr.tar
+cp -r /global/project/projectdirs/star/pwg/starhf/simkomir/LambdaC/StRefMultCorr .
 pushd StRoot >> /dev/null
 ln -s ../StRefMultCorr
 popd >> /dev/null
