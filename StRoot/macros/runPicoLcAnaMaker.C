@@ -65,7 +65,8 @@ void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *output
 		       const unsigned int makerMode = 0 /*kAnalyze*/,
 		       const Char_t *badRunListFileName = "picoList_bad_MB.list", const Char_t *treeName = "picoHFtree",
 		       const Char_t *productionBasePath = "/star/data100/reco/AuAu_200_production_2016/ReversedFullField/P16ij/2016",
-		       const unsigned int decayChannel = 0 /* kChannel0 */) {
+		       const unsigned int decayChannel = 0 /* kChannel0 */,
+		       const int LcCharge = 1) {
   // -- Check STAR Library. Please set SL_version to the original star library used in the production
   //    from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
   string SL_version = "SL16j"; //new: SL16d -> SL16j
@@ -136,7 +137,7 @@ void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *output
 
   StPicoDstMaker* picoDstMaker = new StPicoDstMaker(StPicoDstMaker::IoRead, sInputFile, "picoDstMaker"); //SL16j: See StRoot/StPicoDstMaker/StpicodstMaker.h: 28: enum PicoIoMode {IoWrite=1, IoRead=2};
 //  StPicoDstMaker* picoDstMaker = new StPicoDstMaker(2, sInputFile, "picoDstMaker"); //for local testing only
-  StPicoLcAnaMaker* picoLcAnaMaker = new StPicoLcAnaMaker("picoLcAnaMaker", picoDstMaker, outputFile, sInputListHF);
+  StPicoLcAnaMaker* picoLcAnaMaker = new StPicoLcAnaMaker("picoLcAnaMaker", picoDstMaker, LcCharge, outputFile, sInputListHF);
   picoLcAnaMaker->setMakerMode(makerMode);
   picoLcAnaMaker->setDecayChannel(StPicoLcAnaMaker::kChannel1);//kvapil
   picoLcAnaMaker->setTreeName(treeName);
@@ -198,27 +199,27 @@ void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *output
 
   // -- ADD USER CUTS HERE ----------------------------
 
-	hfCuts->setCutEta(1.);
+  hfCuts->setCutEta(1.);
 
-	hfCuts->setCutTripletdV0Max(0.022);
+  hfCuts->setCutTripletdV0Max(0.022);
 
-	//-----------SECONDARY TRIPLET CUTS----------------------------
-	float dcaDaughters12Max, dcaDaughters23Max, dcaDaughters31Max;
+  //-----------SECONDARY TRIPLET CUTS----------------------------
+  float dcaDaughters12Max, dcaDaughters23Max, dcaDaughters31Max;
   float decayLengthMin, decayLengthMax;
-	float cosThetaMin, massMin, massMax;
+  float cosThetaMin, massMin, massMax;
 
   dcaDaughters12Max = 0.009;
-	dcaDaughters23Max = 0.009;
-	dcaDaughters31Max = 0.009;
+  dcaDaughters23Max = 0.009;
+  dcaDaughters31Max = 0.009;
 
-	decayLengthMin = 0.003;
-	decayLengthMax = 0.2;
+  decayLengthMin = 0.003;
+  decayLengthMax = 0.2;
 
-	cosThetaMin = 0.997;
-	massMin = 1.7;
-	massMax = 2.1;
+  cosThetaMin = 0.997;
+  massMin = 1.7;
+  massMax = 2.1;
 
-	hfCuts->setCutSecondaryTriplet(dcaDaughters12Max, dcaDaughters23Max, dcaDaughters31Max,
+  hfCuts->setCutSecondaryTriplet(dcaDaughters12Max, dcaDaughters23Max, dcaDaughters31Max,
 				 decayLengthMin, decayLengthMax,
 				 cosThetaMin, massMin, massMax);
   // --- Lomnitz cuts to remove noise from ghosting
@@ -226,23 +227,27 @@ void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *output
   //Single track pt
   hfCuts->setCutPtRange(0.3,50.0,StHFCuts::kPion); //used in candidates analysis
   hfCuts->setCutPtRange(0.3,50.0,StHFCuts::kKaon); //changed to 0.3
+  hfCuts->setCutPtRange(0.3,50.0,StHFCuts::kProton); //changed to 0.3
 
-	hfCuts->setCutPtQA(0.3); //p_T used in createQA() in StPicoLcAnaMaker.cxx
+  hfCuts->setCutPtQA(0.3); //p_T used in createQA() in StPicoLcAnaMaker.cxx
   //TPC setters
   hfCuts->setCutTPCNSigmaPion(1.0); //possibly close as possible, e.g. 1.0
   hfCuts->setCutTPCNSigmaKaon(1.0); //all changed to 1.0
-	hfCuts->setCutTPCNSigmaProton(1.0); //for QA and analysis
+  hfCuts->setCutTPCNSigmaProton(1.0); //for QA and analysis
 
-	hfCuts->setCutTPCNSigmaHadronHist(1.0, 1); //1 = pion, not used for QA
-	hfCuts->setCutTPCNSigmaHadronHist(1.0, 2); //2 = kaon
+  hfCuts->setCutTPCNSigmaHadronHist(1.0, StHFCuts::kPion); //1 = pion, not used for QA
+  hfCuts->setCutTPCNSigmaHadronHist(1.0, StHFCuts::kKaon); //2 = kaon
+  hfCuts->setCutTPCNSigmaHadronHist(1.0, StHFCuts::kProton); //2 = kaon
   //TOF setters, need to set pt range as well
   hfCuts->setCutTOFDeltaOneOverBeta(0.03, StHFCuts::kKaon); //changed to 0.03 (same cut as used in analysis)
   hfCuts->setCutPtotRangeHybridTOF(0.3,50.0,StHFCuts::kKaon); //changed lower boundary from 0.5 to 0.3 (same cut as used in analysis)
   hfCuts->setCutTOFDeltaOneOverBeta(0.03, StHFCuts::kPion); //changed to 0.03 (same cut as used in analysis)
   hfCuts->setCutPtotRangeHybridTOF(0.3,50.0,StHFCuts::kPion); //changed lower boundary from 0.5 to 0.3 (same cut as used in analysis)
+  hfCuts->setCutTOFDeltaOneOverBeta(0.03, StHFCuts::kProton); //changed to 0.03 (same cut as used in analysis)
+  hfCuts->setCutPtotRangeHybridTOF(0.3,50.0,StHFCuts::kProton); //changed lower boundary from 0.5 to 0.3 (same cut as used in analysis)
 
   // set refmultCorr
-//  cout<<"test"<<endl;
+  //  cout<<"test"<<endl;
   StRefMultCorr* grefmultCorrUtil = CentralityMaker::instance()->getgRefMultCorr_P16id(); //new StRefMultCorr, info about Run16, SL16j in the same file as for Run14, SL16d
   picoLcAnaMaker->setRefMutCorr(grefmultCorrUtil);
   //cout<<"test2"<<endl;
@@ -277,7 +282,7 @@ void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *output
   cout << "****************************************** " << endl;
   cout << "total number of events  " << nEvents << endl;
   cout << "****************************************** " << endl;
- // cout << "Time needed " << duration << " s" << endl;
+  // cout << "Time needed " << duration << " s" << endl;
   cout << "****************************************** " << endl;
 
   delete chain;
