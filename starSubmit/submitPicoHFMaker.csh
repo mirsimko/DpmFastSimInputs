@@ -25,7 +25,7 @@
 starver SL16j
 
 # -- baseFolder of job
-set baseFolder=${1}
+set baseFolder=/gpfs/mnt/gpfs01/star/pwg/msimko/LambdaC/LcFastSimInputs
 
 # --input file 
 #    makerMode 0,1 : list must contain picoDst.root files
