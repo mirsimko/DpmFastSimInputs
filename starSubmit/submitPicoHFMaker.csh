@@ -21,16 +21,14 @@
 #
 # ###############################################
 
-# -- set STAR software version
-starver SL16j
 
 # -- baseFolder of job
-set baseFolder=${1}
+set baseFolder=/global/project/projectdirs/star/pwg/starhf/simkomir/LcFastSimInputs
 
 # --input file 
 #    makerMode 0,1 : list must contain picoDst.root files
 #    makerMode 2   : list must contain ${treeName}.root files
-set input=${baseFolder}/${2}
+set input=${baseFolder}/picoList_for_fastSim.list
 
 # -- set maker mode
 #    0 - kAnalyze, 
@@ -39,10 +37,10 @@ set input=${baseFolder}/${2}
 set makerMode=0
 
 # -- set root macro
-set rootMacro=runPicoDpmAnaMaker.C
+set rootMacro=runPicoLcAnaMaker.C
 
 # -- set filename for bad run list
-set badRunListFileName="BadRunList_MB.list"
+set badRunListFileName="picoList_bad_MB.list"
 
 # -- set decay channel
 #    can be defined in you analysis - otherwise ignore
@@ -59,18 +57,20 @@ set treeName=MyAna.picoHFtree
 set productionId=`date +%F_%H-%M`
 
 # -- set STAR software version
-set starVersion=SL16j
+set starVersion=SL16d
+
+# -- set STAR software version
+starver ${starVersion}
 
 # -- production base path (to find picoDsts to corresponding trees
-#set productionbasePath=/star/data100/reco/AuAu_200_production_2016/ReversedFullField/P16ij/2016
-set productionbasePath=root://xrdstar.rcf.bnl.gov:1095//home/starlib/home/starreco/reco/AuAu_200_production_2016/ReversedFullField/P16ij/2016/
+set productionbasePath=/project/projectdirs/starprod/picodsts/Run14/AuAu/200GeV/physics2/P16id
 
 # -- submission xml file 
 set xmlFile=submitPicoHFMaker.xml
 
 # -- set min and mx number of files, orig 80 to 90
-set minNFiles=140
-set maxNFiles=150
+set minNFiles=100
+set maxNFiles=140
 
 # ###############################################
 # -- DON'T CHANGE BELOW THAT LINE
@@ -90,7 +90,7 @@ mkdir -p report err log list csh
 # -----------------------------------------------
 
 # -- check for prerequisits and create links
-set folders=".sl73_gcc485 run14AuAu200GeVPrescales"
+set folders=".sl64_gcc482 run14AuAu200GeVPrescales"
 
 echo -n "Checking prerequisits folders ...  "
 foreach folder ( $folders ) 
