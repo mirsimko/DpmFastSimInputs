@@ -22,20 +22,17 @@
     if ("&mMode;" == "1") then
          &basePath;/jobs/&prodId;/starSubmit/parseFileList.csh ${FILELIST} &basePath; &prodId; &mMode; &treeName; ${JOBID} &rootMacro; picoList_badRuns.list &productionBasePath; &decayChannel; &starVersion;
     else
-        root -q -b -l StRoot/macros/loadSharedHFLibraries.C StRoot/macros/&rootMacro;++\(\"$FILELIST\",\"&prodId;_$JOBINDEX\",&mMode;,\"picoList_badRuns.list\",\"&treeName;\",\"&productionBasePath;\",&decayChannel;\) &gt;&amp; ${JOBID}.log
-        tar -zcvf ${JOBID}.log.tgz ${JOBID}.log
+        root -q -b -l StRoot/macros/loadSharedHFLibraries.C StRoot/macros/&rootMacro;++\(\"$FILELIST\",\"&prodId;_$JOBINDEX\",&mMode;,\"picoList_badRuns.list\",\"&treeName;\",\"&productionBasePath;\",&decayChannel;,&LcCharge;\) &gt;&amp; ${JOBID}.log
     endif
 
   </command>
 
   <output fromScratch="*.root"    toURL="$PRODPATH/" />
-  <output fromScratch="*.log.tgz" toURL="$LOGPATH/" />
   <output fromScratch="*.log"     toURL="$LOGPATH/" />
   
   <SandBox installer="ZIP">
     <Package name="LocalLibraries">
       <File>file:./StRoot/</File>
-      <File>file:./run14AuAu200GeVPrescales/</File>
       <File>file:./.sl73_gcc485/</File>
       <File>file:./picoList_badRuns.list</File>
       <File>file:./starSubmit/parseFileList.csh</File>

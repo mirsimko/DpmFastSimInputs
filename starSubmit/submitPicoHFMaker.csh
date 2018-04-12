@@ -30,7 +30,7 @@ set baseFolder=/gpfs/mnt/gpfs01/star/pwg/msimko/LambdaC/LcFastSimInputs
 # --input file 
 #    makerMode 0,1 : list must contain picoDst.root files
 #    makerMode 2   : list must contain ${treeName}.root files
-set input=${baseFolder}/${2}
+set input=${baseFolder}/picoList_for_fastSim.list
 
 # -- set maker mode
 #    0 - kAnalyze, 
@@ -39,7 +39,7 @@ set input=${baseFolder}/${2}
 set makerMode=0
 
 # -- set root macro
-set rootMacro=runPicoDpmAnaMaker.C
+set rootMacro=runPicoLcAnaMaker.C
 
 # -- set filename for bad run list
 set badRunListFileName="BadRunList_MB.list"
@@ -47,6 +47,9 @@ set badRunListFileName="BadRunList_MB.list"
 # -- set decay channel
 #    can be defined in you analysis - otherwise ignore
 set decayChannel=0
+
+# -- set charge of LambdaC
+set LcCharge=-1
 
 # ###############################################
 # -- CHANGE CAREFULLY BELOW THAT LINE
@@ -90,7 +93,7 @@ mkdir -p report err log list csh
 # -----------------------------------------------
 
 # -- check for prerequisits and create links
-set folders=".sl73_gcc485 run14AuAu200GeVPrescales"
+set folders=".sl73_gcc485"
 
 echo -n "Checking prerequisits folders ...  "
 foreach folder ( $folders ) 
@@ -229,6 +232,7 @@ echo '<\!ENTITY productionBasePath "'${productionbasePath}'">' >> $hackTemplate
 echo '<\!ENTITY starVersion "'${starVersion}'">'               >> $hackTemplate
 echo '<\!ENTITY minNFiles "'${minNFiles}'">'                   >> $hackTemplate
 echo '<\!ENTITY maxNFiles "'${maxNFiles}'">'                   >> $hackTemplate
+echo '<\!ENTITY LcCharge "'${LcCharge}'">'		       >> $hackTemplate
 echo ']>'					       	       >> $hackTemplate
 
 tail -n +2 ${xmlFile} >> $hackTemplate
