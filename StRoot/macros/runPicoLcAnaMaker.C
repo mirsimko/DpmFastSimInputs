@@ -84,7 +84,7 @@ void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *output
   loadSharedHFLibraries();
 #endif
 
-  const long numberOfEventsToRun = 1e4;
+  const long numberOfEventsToRun = 1e9;
   if (numberOfEventsToRun < 1e7)
     cerr << "Warning: number of events < 1e7" << endl;
 
