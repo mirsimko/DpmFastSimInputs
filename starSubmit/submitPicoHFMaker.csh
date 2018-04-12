@@ -46,6 +46,9 @@ set badRunListFileName="picoList_bad_MB.list"
 #    can be defined in you analysis - otherwise ignore
 set decayChannel=0
 
+# -- set charge of LambdaC
+set LcCharge=-1
+
 # ###############################################
 # -- CHANGE CAREFULLY BELOW THAT LINE
 # ###############################################
@@ -229,6 +232,7 @@ echo '<\!ENTITY productionBasePath "'${productionbasePath}'">' >> $hackTemplate
 echo '<\!ENTITY starVersion "'${starVersion}'">'               >> $hackTemplate
 echo '<\!ENTITY minNFiles "'${minNFiles}'">'                   >> $hackTemplate
 echo '<\!ENTITY maxNFiles "'${maxNFiles}'">'                   >> $hackTemplate
+echo '<\!ENTITY LcCharge "'${LcCharge}'">'		       >> $hackTemplate
 echo ']>'					       	       >> $hackTemplate
 
 tail -n +2 ${xmlFile} >> $hackTemplate
