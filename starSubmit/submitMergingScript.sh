@@ -1,6 +1,6 @@
 #!/bin/bash
 
-directoryToMerge="$1"
+toMerge="$1"
 
 # -- change for your folder
 baseFolder=/gpfs/mnt/gpfs01/star/pwg/msimko/LambdaC/LcFastSimInputs
@@ -9,8 +9,8 @@ baseFolder=/gpfs/mnt/gpfs01/star/pwg/msimko/LambdaC/LcFastSimInputs
 # -- Do not change below
 # ###############################################
 
-if [ -d "$directoryToMerge" ]; then
-  pushd "$directoryToMerge" >> /dev/null
+if [ -d "$toMerge" ]; then
+  pushd "$toMerge" >> /dev/null
   # we want the physical address of the directory to merge
   directoryToMerge=`pwd -P`
   popd >> /dev/null
@@ -19,24 +19,33 @@ else
   exit 1
 fi
 
-productionId=`date +%F_%H-%M`
+# productionId=`date +%F_%H-%M`
+productionId=`echo $toMerge | sed 's"/"_"g'`
 
-mkdir ${baseFolder}/jobs/merge${productionId}
+jobDir=${baseFolder}/jobs/merge${productionId}
 mkdir ${baseFolder}/production/merge${productionId}
+mkdir "$jobDir"
 
-pushd ${baseFolder}/production/merge${productionId} >> /dev/null
+pushd "$jobDir" >> /dev/null
+
+echo Setting the job in $PWD
 mkdir report err log list csh
 
 # -- check for prerequisits and copy folders
-set folders="starSubmit"
+folders="starSubmit"
 
-echo "Checking prerequisits folders ...  "
+echo "Checking $folders  ...  "
 for folder in $folders ; do
   if [ ! -d ${baseFolder}/${folder} ]; then
     echo "${folder} does not exist in ${baseFolder}"
     exit 1
   else
-    cp -rfL ${baseFolder}/${folder} .
+    if cp -rfL ${baseFolder}/${folder} .  ; then
+      echo Done copying $folder
+    else
+      echo $folder could not be copied
+      exit 1
+    fi
   fi
 done
 echo "ok"
@@ -57,11 +66,9 @@ echo "ok"
 xmlFile="starSubmit/submitMergingScript.xml"
 
 echo "Checking the xml file ...  "
-if [ ! -f ${baseFolder}/${xmlFile} ]; then
+if [ ! -f ${xmlFile} ]; then
   echo "${xmlFile} does not exist in ${baseFolder}"
   exit 1
-else
-  cp -rfL ${baseFolder}/${xmlFile} .
 fi
 echo "ok"
 
@@ -74,6 +81,27 @@ fi
 if [ -d LocalLibraries.package ]; then
   rm -rf LocalLibraries.package
 fi
+
+# -- Jochen's hack of template submission
+# hackTemplate=submitPicoHFMaker_temp.xml 
+#
+# if [ -e submitPicoHFMaker_temp.xml  ]; then
+#   rm submitPicoHFMaker_temp.xml 
+# fi 
+#
+# echo '<?xml version="1.0" encoding="utf-8" ?>'		        > $hackTemplate
+# echo '<\!DOCTYPE note ['                      		       >> $hackTemplate
+# echo '<\!ENTITY basePath "'"$baseFolder"'">'                   >> $hackTemplate   
+# echo '<\!ENTITY prodId "'"$productionId"'">'	               >> $hackTemplate       
+# echo '<\!ENTITY dirToMerge "'"$directoryToMerge"'">'           >> $hackTemplate 
+# echo '<\!ENTITY runMacro "'"$runMacro"'">'  		       >> $hackTemplate
+# echo ']>'					       	       >> $hackTemplate
+#
+# tail -n +2 ${xmlFile} >> $hackTemplate
+#
+# csh << EOF
+# star-submit -u ie $hackTemplate
+# EOF
 
 star-submit-template -template "$xmlFile" -entities basePath="$baseFolder",prodId="$productionId",dirToMerge="$directoryToMerge",runMacro="$runMacro"
 
