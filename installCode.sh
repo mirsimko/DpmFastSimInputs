@@ -12,7 +12,6 @@ popd >> /dev/null
 
 echo
 echo '###############################'
-<<<<<<< HEAD
 echo installing picoDst
 echo '###############################'
 git clone git@github.com:star-bnl/star-picoDst.git
@@ -25,8 +24,6 @@ popd >> /dev/null
 
 echo
 echo '###############################'
-=======
->>>>>>> 15cdc30... submission of merging script as a job
 echo installing auau200GeVRun14and16
 echo '###############################'
 git clone git@github.com:mirsimko/auau200GeVRun14and16.git
