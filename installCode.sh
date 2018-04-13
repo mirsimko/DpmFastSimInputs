@@ -12,19 +12,6 @@ popd >> /dev/null
 
 echo
 echo '###############################'
-echo installing picoDst
-echo '###############################'
-git clone git@github.com:star-bnl/star-picoDst.git
-pushd star-picoDst >> /dev/null
-git checkout SL16j
-popd >> /dev/null
-pushd StRoot >> /dev/null
-ln -s ../star-picoDst/StPicoDstMaker
-ln -s ../star-picoDst/StPicoEvent
-popd >> /dev/null
-
-echo
-echo '###############################'
 echo installing auau200GeVRun14and16
 echo '###############################'
 git clone git@github.com:mirsimko/auau200GeVRun14and16.git

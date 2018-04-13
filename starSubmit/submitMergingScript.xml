@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<job fileListSyntax="xrootd" simulateSubmission="false">
+  <stdout URL="file:&basePath;/jobs/&prodId;/log/merge$JOBID.out"/>
+  <stderr URL="file:&basePath;/jobs/&prodId;/err/merge$JOBID.err"/>
+  
+  <Generator>
+    <Location>./report/</Location>
+    <ScriptLocation>./csh/</ScriptLocation>
+    <ListLocation>./list/</ListLocation>
+  </Generator>
+  
+  <command>
+    setenv PRODPATH &basePath;/production/&prodId;
+    setenv LOGPATH  &basePath;/jobs/&prodId;/log
+
+    mkdir -p ${PRODPATH} ${LOGPATH}
+
+    ./&runMacro; &dirToMerge; &gt;&amp; merge${JOBID}.log
+
+  </command>
+
+  <output fromScratch="merge*.root"    toURL="$PRODPATH/" />
+  <output fromScratch="*.log"          toURL="$LOGPATH/" />
+  
+  <SandBox installer="ZIP">
+    <Package name="LocalLibraries">
+      <File>file:./mergeHere.sh</File>
+    </Package>
+  </SandBox>
+</job>
