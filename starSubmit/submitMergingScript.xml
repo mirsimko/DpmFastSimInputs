@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<<<<<<< HEAD
+<job >
+  <stdout URL="file:&basePath;/jobs/merge&prodId;/log/$JOBID.out"/>
+  <stderr URL="file:&basePath;/jobs/merge&prodId;/err/$JOBID.err"/>
+=======
+<job fileListSyntax="xrootd" simulateSubmission="false">
+  <stdout URL="file:&basePath;/jobs/&prodId;/log/merge$JOBID.out"/>
+  <stderr URL="file:&basePath;/jobs/&prodId;/err/merge$JOBID.err"/>
+>>>>>>> 15cdc30... submission of merging script as a job
+  
+  <Generator>
+    <Location>./report/</Location>
+    <ScriptLocation>./csh/</ScriptLocation>
+    <ListLocation>./list/</ListLocation>
+  </Generator>
+  
+  <command>
+<<<<<<< HEAD
+    setenv PRODPATH &basePath;/production/merge&prodId;
+    setenv LOGPATH  &basePath;/jobs/merge&prodId;/log
+=======
+    setenv PRODPATH &basePath;/production/&prodId;
+    setenv LOGPATH  &basePath;/jobs/&prodId;/log
+>>>>>>> 15cdc30... submission of merging script as a job
+
+    mkdir -p ${PRODPATH} ${LOGPATH}
+
+    ./&runMacro; &dirToMerge; &gt;&amp; merge${JOBID}.log
+<<<<<<< HEAD
+  </command>
+
+  <output fromScratch="merge/*.root"    toURL="$PRODPATH/" />
+=======
+
+  </command>
+
+  <output fromScratch="merge*.root"    toURL="$PRODPATH/" />
+>>>>>>> 15cdc30... submission of merging script as a job
+  <output fromScratch="*.log"          toURL="$LOGPATH/" />
+  
+  <SandBox installer="ZIP">
+    <Package name="LocalLibraries">
+<<<<<<< HEAD
+      <File>file:mergeHere.sh</File>
+=======
+      <File>file:./mergeHere.sh</File>
+>>>>>>> 15cdc30... submission of merging script as a job
+    </Package>
+  </SandBox>
+</job>
