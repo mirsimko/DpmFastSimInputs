@@ -21,5 +21,5 @@ void loadSharedHFLibraries() {
   // -->>> ADD your own library/class HERE 
   gSystem->Load( "StPicoLcAnaMaker" );
 
-  cout << " loading of shared HF libraries are done" << endl;
+  cout << " loading of shared HF libraries is done" << endl;
  }
