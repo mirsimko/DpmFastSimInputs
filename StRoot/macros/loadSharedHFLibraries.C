@@ -16,7 +16,6 @@ void loadSharedHFLibraries() {
   gSystem->Load("StPicoCutsBase");
   gSystem->Load("StPicoPrescales");
   gSystem->Load("StPicoHFMaker");
-  gSystem->Load("StPicoHFMyAnaMaker");
   gSystem->Load("StRefMultCorr");
 
   // -->>> ADD your own library/class HERE 
