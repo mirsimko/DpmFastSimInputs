@@ -138,6 +138,8 @@ void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *output
 
   StPicoDstMaker* picoDstMaker = new StPicoDstMaker(StPicoDstMaker::IoRead, sInputFile, "picoDstMaker"); //SL16j: See StRoot/StPicoDstMaker/StpicodstMaker.h: 28: enum PicoIoMode {IoWrite=1, IoRead=2};
 //  StPicoDstMaker* picoDstMaker = new StPicoDstMaker(2, sInputFile, "picoDstMaker"); //for local testing only
+
+  cout << "Starting: StPicoLcAnaMaker(\"picoLcAnaMaker\", picoDstMaker, " << LcCharge << ", " << outputFile << ", " << sInputListHF << ")" << endl;
   StPicoLcAnaMaker* picoLcAnaMaker = new StPicoLcAnaMaker("picoLcAnaMaker", picoDstMaker, LcCharge, outputFile, sInputListHF);
   picoLcAnaMaker->setMakerMode(makerMode);
   picoLcAnaMaker->setDecayChannel(StPicoLcAnaMaker::kChannel1);//kvapil
