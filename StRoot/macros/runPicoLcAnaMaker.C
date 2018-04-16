@@ -137,6 +137,8 @@ void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *output
   }
 
   StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0, sInputFile, "picoDstMaker");
+
+  cout << "Starting: StPicoLcAnaMaker(\"picoLcAnaMaker\", picoDstMaker, " << LcCharge << ", " << outputFile << ", " << sInputListHF << ")" << endl;
   StPicoLcAnaMaker* picoLcAnaMaker = new StPicoLcAnaMaker("picoLcAnaMaker", picoDstMaker, LcCharge, outputFile, sInputListHF);
   picoLcAnaMaker->setMakerMode(makerMode);
   picoLcAnaMaker->setDecayChannel(StPicoLcAnaMaker::kChannel1);//kvapil
