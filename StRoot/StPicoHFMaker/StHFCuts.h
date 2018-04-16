@@ -233,7 +233,7 @@ inline void StHFCuts::setCutTPCNSigmaHadronHist(float nSigHadr, int hadrFlag) {
   switch(hadrFlag)
   {
     case StPicoCutsBase::kPion: mNSigPionHist = nSigHadr; break;
-    case StPicoCutsBase::kKaon: mNSigKaonHist = nSigHadr; break
+    case StPicoCutsBase::kKaon: mNSigKaonHist = nSigHadr; break;
     case StPicoCutsBase::kProton: mNSigProtonHist = nSigHadr; break;
     default: std::cerr << "StHFCuts::setCutTPCNSigmaHadronHist: unexpected particle: exitting" << std::endl; return;
   }
