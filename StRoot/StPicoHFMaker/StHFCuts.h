@@ -59,6 +59,7 @@ public:
   inline bool hasGoodNSigmaHist(StPicoTrack const *track, int hadrFlag) const;
   inline bool hasGoodTripletdV0Max(StHFTriplet const &triplet) const;
   inline bool hasGoodPtQA(StPicoTrack const *track) const;
+  inline bool isTofTrack(StPicoTrack const * track) const;
 
 
   //--------------------------------------------------------------------------
@@ -310,5 +311,10 @@ inline bool StHFCuts::hasGoodPtQA(StPicoTrack const *track) const {
   return ( track->gPt() > mPtQA  );
 }
 
+// _________________________________________________________
+inline bool StHFCuts::isTofTrack(StPicoTrack const *track) const {
+  float beta = getTofBetaBase(track);
+  return (beta > 0) && (!isnan(beta));
+}
 
 #endif
