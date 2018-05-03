@@ -97,6 +97,7 @@ void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *output
   cout << "Decay Channel " << decayChannel << endl;
 
   TString sInputFile(inputFile);
+  cout << "sInputFile: " << inputFile << endl;
   TString sInputListHF("");
   TString sProductionBasePath(productionBasePath);
   TString sTreeName(treeName);
@@ -114,22 +115,22 @@ void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *output
     }
   }
   else if (makerMode == StPicoHFMaker::kRead) {
-   if (!sInputFile.Contains(".list")) {
+    if (!sInputFile.Contains(".list")) {
       cout << "No input list provided! Exiting..." << endl;
       exit(1);
-   }
+    }
 
-   // -- prepare filelist for picoDst from trees
-   sInputListHF = sInputFile;
-   sInputFile = "tmpPico.list";
+    // -- prepare filelist for picoDst from trees
+    sInputListHF = sInputFile;
+    sInputFile = "tmpPico.list";
 
-   TString command = "sed 's|" + sTreeName + ".root|picoDst.root|g' " + sInputListHF + " > " + sInputFile;
-   cout << "COMMAND : " << command << endl;
-   gSystem->Exec(command.Data());
+    TString command = "sed 's|" + sTreeName + ".root|picoDst.root|g' " + sInputListHF + " > " + sInputFile;
+    cout << "COMMAND : " << command << endl;
+    gSystem->Exec(command.Data());
 
-   command = "sed -i 's|^.*" + sTreeName + "|" + sProductionBasePath + "|g' " + sInputFile; // + " > " + sInputFile;
-   cout << "COMMAND : " << command << endl;
-   gSystem->Exec(command.Data());
+    command = "sed -i 's|^.*" + sTreeName + "|" + sProductionBasePath + "|g' " + sInputFile; // + " > " + sInputFile;
+    cout << "COMMAND : " << command << endl;
+    gSystem->Exec(command.Data());
   }
   else {
     cout << "Unknown makerMode! Exiting..." << endl;
@@ -138,7 +139,7 @@ void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *output
 
   StPicoDstMaker* picoDstMaker = new StPicoDstMaker(0, sInputFile, "picoDstMaker");
 
-  cout << "Starting: StPicoLcAnaMaker(\"picoLcAnaMaker\", picoDstMaker, " << LcCharge << ", " << outputFile << ", " << sInputListHF << ")" << endl;
+  cout << "Starting: StPicoLcAnaMaker(\"picoLcAnaMaker\", picoDstMaker, " << LcCharge << ", " << outputFile << ", " << sInputListHF.Data() << ")" << endl;
   StPicoLcAnaMaker* picoLcAnaMaker = new StPicoLcAnaMaker("picoLcAnaMaker", picoDstMaker, LcCharge, outputFile, sInputListHF);
   picoLcAnaMaker->setMakerMode(makerMode);
   picoLcAnaMaker->setDecayChannel(StPicoLcAnaMaker::kChannel1);//kvapil
@@ -256,7 +257,7 @@ void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *output
   nEvents = nEvents < numberOfEventsToRun ? nEvents : numberOfEventsToRun; 
 
   for (Int_t i=0; i<nEvents; i++) {
-    if(i%10000==0)
+    if(i%1000==0)
       cout << "Working on eventNumber " << i << endl;
 
     chain->Clear();
