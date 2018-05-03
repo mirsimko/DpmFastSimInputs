@@ -289,25 +289,25 @@ void StPicoLcAnaMaker::addTpcDenom1(bool IsPion, bool IsKaon, bool IsProton, flo
   if(VzIndex == -1) return;
   //std::cout<<"2: "<<IsPion<<" "<<IsKaon<<" "<<IsProton<<" "<<pt<<" "<<centrality<<" "<<Eta<<" "<<Phi<<" "<<Vz<<" "<<EtaIndex<<" "<<PhiIndex<<" "<<VzIndex<<std::endl;
 
-  if (IsPion){
-    mh1Tpc1Pt[0]->Fill(pt);
-    mh2Tpc1PtCentPartEtaVzPhi[0][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
+  for (int i = 0; i < m_nParticles; ++i)
+  {
+    if (i == 0 && !IsPion)
+      continue;
+    if (i == 1 && !IsKaon)
+      continue;
+    if ( i== 2 && !IsProton)
+      continue;
+    if ( i > 2 )
+    {
+      cerr << "StPicoLcAnaMaker::addTpcDenom1: unexpected PID flag." << endl;
+      throw;
+    }
+
+    mh1Tpc1Pt[i]->Fill(pt);
+    mh2Tpc1PtCentPartEtaVzPhi[i][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
+    mh2Tpc1PtCentParticles[i]->Fill(pt, centrality);
     if(isTOF)
-      mh2TOF1PtCent[0]->Fill(pt, centrality);
-    //if(mh2Tpc1PtCentPartEtaVzPhi[0][EtaIndex][VzIndex][PhiIndex]) std::cout<<"true"<<<<std::endl;
-    //std::cout<<pt<<" "<<centrality<<std::endl;
-  }
-  if (IsKaon){
-    mh1Tpc1Pt[1]->Fill(pt);
-    mh2Tpc1PtCentPartEtaVzPhi[1][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
-    if(isTOF)
-      mh2TOF1PtCent[1]->Fill(pt, centrality);
-  }
-  if (IsProton){
-    mh1Tpc1Pt[2]->Fill(pt);
-    mh2Tpc1PtCentPartEtaVzPhi[2][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
-    if(isTOF)
-      mh2TOF1PtCent[2]->Fill(pt, centrality);
+      mh2TOF1PtCent[i]->Fill(pt, centrality);
   }
   mh2Tpc1PtCent->Fill(pt, centrality);
   if (fabs(Eta) < mHFCuts->getEtaMax(StPicoCutsBase::kPion)  && pt > mHFCuts->getPtMin(StPicoCutsBase::kPion)) mh2Tpc1PhiVz->Fill(Phi, Vz); 
@@ -321,26 +321,31 @@ void StPicoLcAnaMaker::addHFTNumer1(bool IsPion, bool IsKaon, bool IsProton, flo
   if(EtaIndex == -1) return;
   if(PhiIndex == -1) return;
   if(VzIndex == -1) return;
-  if (IsPion){
-    mh1HFT1Pt[0]->Fill(pt);
-    mh2HFT1PtCentPartEtaVzPhi[0][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
+
+  // PID loop
+  for (int i = 0; i < m_nParticles; ++i)
+  {
+    if (i == 0 && !IsPion)
+      continue;
+    if (i == 1 && !IsKaon)
+      continue;
+    if (i == 2 && !IsProton)
+      continue;
+    if ( i > 2 )
+    {
+      cerr << "StPicoLcAnaMaker::addTpcDenom1: unexpected PID flag." << endl;
+      throw;
+    }
+
+    mh1HFT1Pt[i]->Fill(pt);
+    mh2HFT1PtCentPartEtaVzPhi[i][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
     if(isTOF)
-      mh2TOF1HFTPtCent[0]->Fill(pt, centrality);
+      mh2TOF1HFTPtCent[i]->Fill(pt, centrality);
   }
-  if (IsKaon){
-    mh1HFT1Pt[1]->Fill(pt);
-    mh2HFT1PtCentPartEtaVzPhi[1][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
-    if(isTOF)
-      mh2TOF1HFTPtCent[1]->Fill(pt, centrality);
-  }
-  if (IsProton){
-    mh1HFT1Pt[2]->Fill(pt);
-    mh2HFT1PtCentPartEtaVzPhi[2][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
-    if(isTOF)
-      mh2TOF1HFTPtCent[2]->Fill(pt, centrality);
-  }
+
   mh2HFT1PtCent->Fill(pt, centrality);
-  if (fabs(Eta) < mHFCuts->getEtaMax(StPicoCutsBase::kPion)  && pt > mHFCuts->getPtMin(StPicoCutsBase::kPion)) mh2HFT1PhiVz->Fill(Phi, Vz);
+  if (fabs(Eta) < mHFCuts->getEtaMax(StPicoCutsBase::kPion)  && pt > mHFCuts->getPtMin(StPicoCutsBase::kPion)) 
+    mh2HFT1PhiVz->Fill(Phi, Vz);
   // eta and pt cuts are the same for all particle species so, arbitrarily, pion was chosen
 }
 //---------------------------------------------------------------------
