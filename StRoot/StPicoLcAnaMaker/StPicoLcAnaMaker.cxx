@@ -116,6 +116,7 @@ int StPicoLcAnaMaker::createQA(){
     StThreeVectorF momentum = trk->gMom(mPrimVtx, mPicoDst->event()->bField());
 
     // if (!isGoodQaTrack(trk, momentum, dca)) continue; pt, nhits, pseudorap
+    if (fabs(dca) < mHFCuts->cutDca()) continue;
     if (!(mHFCuts->hasGoodPtQA(trk))) continue;
     if (!(mHFCuts->hasGoodNHitsFitMinHist(trk))) continue;
     if (!(mHFCuts->hasGoodNHitsFitnHitsMax(trk))) continue; //nHitsFit/nHitsMax
