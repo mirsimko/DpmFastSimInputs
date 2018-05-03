@@ -123,8 +123,8 @@ public:
   //  float getTofBeta(StPicoTrack const*,StThreeVectorF const& vtx) const;
 
   void histoInit(TString fileBaseName,bool fillQaHists=true);
-  void addTpcDenom1(bool IsPion, bool IsKaon, bool IsProton, float pt, int centrality, float Eta, float Phi, float Vz);
-  void addHFTNumer1(bool IsPion, bool IsKaon, bool IsProton, float pt, int centrality, float Eta, float Phi, float Vz);
+  void addTpcDenom1(bool IsPion, bool IsKaon, bool IsProton, float pt, int centrality, float Eta, float Phi, float Vz, bool isTOF);
+  void addHFTNumer1(bool IsPion, bool IsKaon, bool IsProton, float pt, int centrality, float Eta, float Phi, float Vz, bool isTOF);
   void addDcaPtCent(float dca, float dcaXy, float  dcaZ, bool IsPion, bool IsKaon, bool IsProton, float pt,  int centrality, float Eta, float Phi, float Vz);
   int getEtaIndexDca(float Eta) ;
   int getPhiIndexDca(float Phi) ;
@@ -194,6 +194,11 @@ private:
   //HFT ratio QA
   TH2F* mh2Tpc1PtCent;
   TH2F* mh2Tpc1PhiVz;
+  TH1D* mh1Tpc1Pt[m_nParticles];
+  TH1D* mh1HFT1Pt[m_nParticles];
+  TH2F* mh2TOF1PtCent[m_nParticles];
+  TH2F* mh2TOF1HFTPtCent[m_nParticles];
+  TH2F* mh2Tpc1PtCentParticles[m_nParticles];
   TH2F* mh2HFT1PtCent;
   TH2F* mh2HFT1PhiVz;
   TH2F* mh2Tpc1PtCentPartEtaVzPhi[m_nParticles][m_nEtasRatio][m_nVzsRatio][m_nPhisRatio];
