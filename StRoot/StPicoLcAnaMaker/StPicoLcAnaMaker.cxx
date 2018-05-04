@@ -250,28 +250,28 @@ void StPicoLcAnaMaker::histoInit(TString fileBaseName, bool fillQaHists){
     mh2TOF1PtCent[iParticle] = new TH2F(Form("mh2TOF1PtCent_%d", iParticle), "mh2TOF1PtCent_" + m_ParticleName[iParticle], 120, 0, 12, 10, -1.5, 8.5);
     mh2TOF1HFTPtCent[iParticle] = new TH2F(Form("mh2TOF1HFTPtCent_%d", iParticle), "mh2TOF1HFTPtCent_" + m_ParticleName[iParticle], 120, 0, 12, 10, -1.5, 8.5);
 
-    for (int iEta = 0; iEta < m_nEtasRatio; ++iEta){
-      for (int iVz = 0; iVz < m_nVzsRatio; ++iVz){
-	for (int iPhi = 0; iPhi < m_nPhisRatio; ++iPhi){
-
-	  mh2Tpc1PtCentPartEtaVzPhi[iParticle][iEta][iVz][iPhi]  = new TH2F(Form("mh2Tpc1PtCentPartEtaVzPhi_%d_%d_%d_%d", iParticle, iEta, iVz, iPhi), "mh2Tpc1PtCent_"+m_ParticleName[iParticle]+Form("_Eta%2.1f_Vz%2.1f_Phi%2.1f;p_{T}(GeV/c);cent", m_EtaEdgeRatio[iEta], m_VzEdgeRatio[iVz], m_PhiEdgeRatio[iPhi]), m_nPtsRatio, m_PtEdgeRatio, m_nCentsRatio, m_CentEdgeRatio); //Dca 1.cm
-	  mh2HFT1PtCentPartEtaVzPhi[iParticle][iEta][iVz][iPhi]  = new TH2F(Form("mh2HFT1PtCentPartEtaVzPhi_%d_%d_%d_%d", iParticle, iEta, iVz, iPhi), "mh2HFT1PtCent_"+m_ParticleName[iParticle]+Form("_Eta%2.1f_Vz%2.1f_Phi%2.1f;p_{T}(GeV/c);cent", m_EtaEdgeRatio[iEta], m_VzEdgeRatio[iVz], m_PhiEdgeRatio[iPhi]), m_nPtsRatio, m_PtEdgeRatio, m_nCentsRatio, m_CentEdgeRatio); //Dca 1.cm
-	}
-      }
-    }
+    // for (int iEta = 0; iEta < m_nEtasRatio; ++iEta){
+    //   for (int iVz = 0; iVz < m_nVzsRatio; ++iVz){
+	// for (int iPhi = 0; iPhi < m_nPhisRatio; ++iPhi){
+    //
+	//   mh2Tpc1PtCentPartEtaVzPhi[iParticle][iEta][iVz][iPhi]  = new TH2F(Form("mh2Tpc1PtCentPartEtaVzPhi_%d_%d_%d_%d", iParticle, iEta, iVz, iPhi), "mh2Tpc1PtCent_"+m_ParticleName[iParticle]+Form("_Eta%2.1f_Vz%2.1f_Phi%2.1f;p_{T}(GeV/c);cent", m_EtaEdgeRatio[iEta], m_VzEdgeRatio[iVz], m_PhiEdgeRatio[iPhi]), m_nPtsRatio, m_PtEdgeRatio, m_nCentsRatio, m_CentEdgeRatio); //Dca 1.cm
+	//   mh2HFT1PtCentPartEtaVzPhi[iParticle][iEta][iVz][iPhi]  = new TH2F(Form("mh2HFT1PtCentPartEtaVzPhi_%d_%d_%d_%d", iParticle, iEta, iVz, iPhi), "mh2HFT1PtCent_"+m_ParticleName[iParticle]+Form("_Eta%2.1f_Vz%2.1f_Phi%2.1f;p_{T}(GeV/c);cent", m_EtaEdgeRatio[iEta], m_VzEdgeRatio[iVz], m_PhiEdgeRatio[iPhi]), m_nPtsRatio, m_PtEdgeRatio, m_nCentsRatio, m_CentEdgeRatio); //Dca 1.cm
+	// }
+    //   }
+    // }
   }
 
   // Add some Dca, resolution
-  for (int iParticle = 0; iParticle < m_nParticles; iParticle++){
-    for (int iEta = 0; iEta < m_nEtasDca; iEta++){
-      for (int iVz = 0; iVz < m_nVzsDca; iVz++){
-	for (int iCent = 0; iCent < m_nCentsDca; iCent++){
-
-	  mh3DcaXyZPtCentPartEtaVzPhi[iParticle][iEta][iVz][iCent]  = new TH3F(Form("mh3DcaXyZPtCentPartEtaVzPhi_%d_%d_%d_%d", iParticle, iEta, iVz, iCent),"mh3DcaXyZPt_"+m_ParticleName[iParticle]+Form("_Eta%2.1f_Vz%2.1f_Cent%2.1f;p_{T}(GeV/c);DcaXy(cm);DcaZ(cm)", m_EtaEdgeDca[iEta], m_VzEdgeDca[iVz], m_CentEdgeDca[iCent]), m_nPtsDca, m_PtEdgeDca, m_nDcasDca, m_DcaEdgeDca, m_nDcasDca, m_DcaEdgeDca); //Dca 1.cm
-	}
-      }
-    }
-  }
+  // for (int iParticle = 0; iParticle < m_nParticles; iParticle++){
+  //   for (int iEta = 0; iEta < m_nEtasDca; iEta++){
+  //     for (int iVz = 0; iVz < m_nVzsDca; iVz++){
+	// for (int iCent = 0; iCent < m_nCentsDca; iCent++){
+  //
+	//   mh3DcaXyZPtCentPartEtaVzPhi[iParticle][iEta][iVz][iCent]  = new TH3F(Form("mh3DcaXyZPtCentPartEtaVzPhi_%d_%d_%d_%d", iParticle, iEta, iVz, iCent),"mh3DcaXyZPt_"+m_ParticleName[iParticle]+Form("_Eta%2.1f_Vz%2.1f_Cent%2.1f;p_{T}(GeV/c);DcaXy(cm);DcaZ(cm)", m_EtaEdgeDca[iEta], m_VzEdgeDca[iVz], m_CentEdgeDca[iCent]), m_nPtsDca, m_PtEdgeDca, m_nDcasDca, m_DcaEdgeDca, m_nDcasDca, m_DcaEdgeDca); //Dca 1.cm
+	// }
+  //     }
+  //   }
+  // }
 
   mh3DcaPtCent  = new TH3F("mh3DcaPtCent", "mh3DcaPtCent;p_{T}(GeV/c);cent;Dca(cm)", 120, 0, 12, 10, -1.5, 8.5, 1000, -1, 1); //Dca 1.cm
   mh3DcaXyPtCent  = new TH3F("mh3DcaXyPtCent", "mh3DcaXyPtCent;p_{T}(GeV/c);cent;DcaXy(cm)", 120, 0, 12, 10, -1.5, 8.5, 1000, -1, 1); //Dca 1.cm
@@ -304,8 +304,8 @@ void StPicoLcAnaMaker::addTpcDenom1(bool IsPion, bool IsKaon, bool IsProton, flo
     }
 
     mh1Tpc1Pt[i]->Fill(pt);
-    mh2Tpc1PtCentPartEtaVzPhi[i][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
-    mh2Tpc1PtCentParticles[i]->Fill(pt, centrality);
+    // mh2Tpc1PtCentPartEtaVzPhi[i][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
+    // mh2Tpc1PtCentParticles[i]->Fill(pt, centrality);
     if(isTOF)
       mh2TOF1PtCent[i]->Fill(pt, centrality);
   }
@@ -338,7 +338,7 @@ void StPicoLcAnaMaker::addHFTNumer1(bool IsPion, bool IsKaon, bool IsProton, flo
     }
 
     mh1HFT1Pt[i]->Fill(pt);
-    mh2HFT1PtCentPartEtaVzPhi[i][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
+    // mh2HFT1PtCentPartEtaVzPhi[i][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
     if(isTOF)
       mh2TOF1HFTPtCent[i]->Fill(pt, centrality);
   }
@@ -356,15 +356,15 @@ void StPicoLcAnaMaker::addDcaPtCent(float dca, float dcaXy, float dcaZ, bool IsP
   if(VzIndex == -1) return;
 
   if (centrality < 0) return; // remove bad centrality, only keep 9 centralities
-  if (IsPion){
-    mh3DcaXyZPtCentPartEtaVzPhi[0][EtaIndex][VzIndex][centrality]->Fill(pt, dcaXy, dcaZ);
-  }
-  if (IsKaon){
-    mh3DcaXyZPtCentPartEtaVzPhi[1][EtaIndex][VzIndex][centrality]->Fill(pt, dcaXy, dcaZ);
-  }
-  if (IsProton){
-    mh3DcaXyZPtCentPartEtaVzPhi[2][EtaIndex][VzIndex][centrality]->Fill(pt, dcaXy, dcaZ);
-  }
+  // if (IsPion){
+  //   mh3DcaXyZPtCentPartEtaVzPhi[0][EtaIndex][VzIndex][centrality]->Fill(pt, dcaXy, dcaZ);
+  // }
+  // if (IsKaon){
+  //   mh3DcaXyZPtCentPartEtaVzPhi[1][EtaIndex][VzIndex][centrality]->Fill(pt, dcaXy, dcaZ);
+  // }
+  // if (IsProton){
+  //   mh3DcaXyZPtCentPartEtaVzPhi[2][EtaIndex][VzIndex][centrality]->Fill(pt, dcaXy, dcaZ);
+  // }
   mh3DcaPtCent->Fill(pt, centrality, dca);
   mh3DcaXyPtCent->Fill(pt, centrality, dcaXy);
   mh3DcaZPtCent->Fill(pt, centrality, dcaZ);
@@ -455,19 +455,19 @@ void StPicoLcAnaMaker::closeFile()
   mh2HFT1PtCent->Write();
 //	cout<<"CloseFile3"<<endl;
   //HFT DCA Ratio
-  for (int iParticle = 0; iParticle < m_nParticles; iParticle++)
-  {
-    for (int iEta = 0; iEta < m_nEtasDca; iEta++)
-    {
-      for (int iVz = 0; iVz < m_nVzsDca; iVz++)
-      {
-	for (int iCent = 0; iCent < m_nCentsDca; iCent++)
-	{
-	  mh3DcaXyZPtCentPartEtaVzPhi[iParticle][iEta][iVz][iCent]->Write();
-	}
-      }
-    }
-  }
+  // for (int iParticle = 0; iParticle < m_nParticles; iParticle++)
+  // {
+  //   for (int iEta = 0; iEta < m_nEtasDca; iEta++)
+  //   {
+  //     for (int iVz = 0; iVz < m_nVzsDca; iVz++)
+  //     {
+	// for (int iCent = 0; iCent < m_nCentsDca; iCent++)
+	// {
+	//   mh3DcaXyZPtCentPartEtaVzPhi[iParticle][iEta][iVz][iCent]->Write();
+	// }
+  //     }
+  //   }
+  // }
   // std::cout<<"tuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"<<m_nParticles<<" "<<m_nEtasRatio<<std::endl;
 //cout<<"CloseFile4"<<endl;
   for (int iParticle = 0; iParticle < m_nParticles; iParticle++)
@@ -476,17 +476,17 @@ void StPicoLcAnaMaker::closeFile()
     mh1HFT1Pt[iParticle]->Write();
     mh2TOF1HFTPtCent[iParticle]->Write();
     mh2TOF1PtCent[iParticle]->Write();
-    for (int iEta = 0; iEta < m_nEtasRatio; iEta++)
-    {
-      for (int iVz = 0; iVz < m_nVzsRatio; iVz++)
-      {
-	for (int iPhi = 0; iPhi < m_nPhisRatio; iPhi++)
-	{
-	  mh2Tpc1PtCentPartEtaVzPhi[iParticle][iEta][iVz][iPhi]->Write();
-	  mh2HFT1PtCentPartEtaVzPhi[iParticle][iEta][iVz][iPhi]->Write();
-	}
-      }
-    }
+    // for (int iEta = 0; iEta < m_nEtasRatio; iEta++)
+    // {
+    //   for (int iVz = 0; iVz < m_nVzsRatio; iVz++)
+    //   {
+	// for (int iPhi = 0; iPhi < m_nPhisRatio; iPhi++)
+	// {
+	//   mh2Tpc1PtCentPartEtaVzPhi[iParticle][iEta][iVz][iPhi]->Write();
+	//   mh2HFT1PtCentPartEtaVzPhi[iParticle][iEta][iVz][iPhi]->Write();
+	// }
+    //   }
+    // }
   }
 
   mh3DcaPtCent->Write();
