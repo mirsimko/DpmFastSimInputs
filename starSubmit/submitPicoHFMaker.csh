@@ -49,7 +49,7 @@ set badRunListFileName="BadRunList_MB.list"
 set decayChannel=0
 
 # -- set charge of LambdaC
-set LcCharge=1
+set LcCharge=-1
 
 # ###############################################
 # -- CHANGE CAREFULLY BELOW THAT LINE
