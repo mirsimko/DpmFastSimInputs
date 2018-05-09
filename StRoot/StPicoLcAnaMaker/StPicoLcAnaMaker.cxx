@@ -110,7 +110,7 @@ int StPicoLcAnaMaker::createQA(){
     StThreeVectorF momentum = trk->gMom(mPrimVtx, mPicoDst->event()->bField());
 
     // if (!isGoodQaTrack(trk, momentum, dca)) continue; pt, nhits, pseudorap
-    if (fabs(dca) < mHFCuts->cutDca()) continue;
+    if (fabs(dca) > mHFCuts->cutDca()) continue;
     if (!(mHFCuts->hasGoodPtQA(trk))) continue;
     if (!(mHFCuts->hasGoodNHitsFitMinHist(trk))) continue;
     if (!(mHFCuts->hasGoodNHitsFitnHitsMax(trk))) continue; //nHitsFit/nHitsMax
@@ -131,9 +131,17 @@ int StPicoLcAnaMaker::createQA(){
     float hBeta = mHFCuts->getTofBetaBase(trk); //SL16j, Vanek
     bool hTofAvailable = !isnan(hBeta) && hBeta > 0;
 
-    bool goodPion = tpcPion; //do not want TOF for HFT matching and resolution determination
-    bool goodKaon = tpcKaon;
-    bool goodProton = tpcProton;
+    bool tofPion = false, tofKaon = false, tofProton = false;
+    if(mHFCuts->isTOFHadron(trk, hBeta, StHFCuts::kPion, mPrimVtx))
+      tofPion = true;
+    if(mHFCuts->isTOFHadron(trk, hBeta, StHFCuts::kKaon, mPrimVtx))
+      tofKaon = true;
+    if(mHFCuts->isTOFHadron(trk, hBeta, StHFCuts::kProton, mPrimVtx))
+      tofProton = true;
+
+    bool goodPion = tpcPion && tofPion; //do not want TOF for HFT matching and resolution determination
+    bool goodKaon = tpcKaon && tofKaon;
+    bool goodProton = tpcProton && tofProton;
 
     if (trk  && fabs(dca) < mHFCuts->cutDca() && trk->isHFTTrack() && (goodPion || goodKaon || goodProton)){
       addDcaPtCent(dca, dcaXy, dcaZ, goodPion, goodKaon, goodProton, momentum.perp(), centrality, momentum.pseudoRapidity(), momentum.phi(), mPrimVtx.z()); //add Dca distribution
@@ -244,6 +252,8 @@ void StPicoLcAnaMaker::histoInit(TString fileBaseName, bool fillQaHists){
     mh1HFT1Pt[iParticle] = new TH1D(Form("mh1HFT1Pt_%d", iParticle), "mh1HFT1Pt_" + m_ParticleName[iParticle], 120, 0, 12);
     mh2TOF1PtCent[iParticle] = new TH2F(Form("mh2TOF1PtCent_%d", iParticle), "mh2TOF1PtCent_" + m_ParticleName[iParticle], 120, 0, 12, 10, -1.5, 8.5);
     mh2TOF1HFTPtCent[iParticle] = new TH2F(Form("mh2TOF1HFTPtCent_%d", iParticle), "mh2TOF1HFTPtCent_" + m_ParticleName[iParticle], 120, 0, 12, 10, -1.5, 8.5);
+    mh2HFT1PtCentParticles[iParticle] = new TH2F(Form("mh2HFT1PtCentParticles_%d", iParticle), "mh2HFT1PtCentParticles_" + m_ParticleName[iParticle], 120, 0, 12, 10, -1.5, 8.5);
+    mh2Tpc1PtCentParticles[iParticle] = new TH2F(Form("mh2Tpc1PtCentParticles_%d", iParticle), "mh2Tpc1PtCentParticles_" + m_ParticleName[iParticle], 120, 0, 12, 10, -1.5, 8.5);
 
     // for (int iEta = 0; iEta < m_nEtasRatio; ++iEta){
     //   for (int iVz = 0; iVz < m_nVzsRatio; ++iVz){
@@ -300,7 +310,7 @@ void StPicoLcAnaMaker::addTpcDenom1(bool IsPion, bool IsKaon, bool IsProton, flo
 
     mh1Tpc1Pt[i]->Fill(pt);
     // mh2Tpc1PtCentPartEtaVzPhi[i][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
-    // mh2Tpc1PtCentParticles[i]->Fill(pt, centrality);
+    mh2Tpc1PtCentParticles[i]->Fill(pt, centrality);
     if(isTOF)
       mh2TOF1PtCent[i]->Fill(pt, centrality);
   }
@@ -333,6 +343,7 @@ void StPicoLcAnaMaker::addHFTNumer1(bool IsPion, bool IsKaon, bool IsProton, flo
     }
 
     mh1HFT1Pt[i]->Fill(pt);
+    mh2HFT1PtCentParticles[i]->Fill(pt, centrality);
     // mh2HFT1PtCentPartEtaVzPhi[i][EtaIndex][VzIndex][PhiIndex]->Fill(pt, centrality);
     if(isTOF)
       mh2TOF1HFTPtCent[i]->Fill(pt, centrality);
@@ -471,6 +482,8 @@ void StPicoLcAnaMaker::closeFile()
     mh1HFT1Pt[iParticle]->Write();
     mh2TOF1HFTPtCent[iParticle]->Write();
     mh2TOF1PtCent[iParticle]->Write();
+    mh2Tpc1PtCentParticles[iParticle]->Write();
+    mh2HFT1PtCentParticles[iParticle]->Write();
     // for (int iEta = 0; iEta < m_nEtasRatio; iEta++)
     // {
     //   for (int iVz = 0; iVz < m_nVzsRatio; iVz++)

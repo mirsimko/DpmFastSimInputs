@@ -228,11 +228,11 @@ void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *output
   hfCuts->setCutTPCNSigmaHadronHist(1.0, StHFCuts::kKaon); //2 = kaon
   hfCuts->setCutTPCNSigmaHadronHist(1.0, StHFCuts::kProton); //2 = kaon
   //TOF setters, need to set pt range as well
-  hfCuts->setCutTOFDeltaOneOverBeta(0.03, StHFCuts::kKaon); //changed to 0.03 (same cut as used in analysis)
+  hfCuts->setCutTOFDeltaOneOverBeta(0.02, StHFCuts::kKaon); //changed to 0.03 (same cut as used in analysis)
   hfCuts->setCutPtotRangeHybridTOF(0.3,50.0,StHFCuts::kKaon); //changed lower boundary from 0.5 to 0.3 (same cut as used in analysis)
-  hfCuts->setCutTOFDeltaOneOverBeta(0.03, StHFCuts::kPion); //changed to 0.03 (same cut as used in analysis)
+  hfCuts->setCutTOFDeltaOneOverBeta(0.02, StHFCuts::kPion); //changed to 0.03 (same cut as used in analysis)
   hfCuts->setCutPtotRangeHybridTOF(0.3,50.0,StHFCuts::kPion); //changed lower boundary from 0.5 to 0.3 (same cut as used in analysis)
-  hfCuts->setCutTOFDeltaOneOverBeta(0.03, StHFCuts::kProton); //changed to 0.03 (same cut as used in analysis)
+  hfCuts->setCutTOFDeltaOneOverBeta(0.02, StHFCuts::kProton); //changed to 0.03 (same cut as used in analysis)
   hfCuts->setCutPtotRangeHybridTOF(0.3,50.0,StHFCuts::kProton); //changed lower boundary from 0.5 to 0.3 (same cut as used in analysis)
 
   // set refmultCorr
