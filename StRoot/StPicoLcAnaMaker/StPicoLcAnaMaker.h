@@ -192,17 +192,17 @@ private:
   TH2F* mh2CentVzWg;
 
   //HFT ratio QA
-  TH2F* mh2Tpc1PtCent;
-  TH2F* mh2Tpc1PhiVz;
+  TH2D* mh2Tpc1PtCent;
+  TH2D* mh2Tpc1PhiVz;
   TH1D* mh1Tpc1Pt[m_nParticles];
   TH1D* mh1HFT1Pt[m_nParticles];
-  TH2F* mh2TOF1PtCent[m_nParticles];
-  TH2F* mh2TOF1HFTPtCent[m_nParticles];
-  TH2F* mh2Tpc1PtCentParticles[m_nParticles];
-  TH2F* mh2HFT1PtCentParticles[m_nParticles];
-  TH2F* mh2HFT1PtCent;
-  TH2F* mh2HFT1PhiVz;
-  // TH2F* mh2Tpc1PtCentPartEtaVzPhi[m_nParticles][m_nEtasRatio][m_nVzsRatio][m_nPhisRatio];
+  TH2D* mh2TOF1PtCent[m_nParticles];
+  TH2D* mh2TOF1HFTPtCent[m_nParticles];
+  TH2D* mh2Tpc1PtCentParticles[m_nParticles];
+  TH2D* mh2HFT1PtCentParticles[m_nParticles];
+  TH2D* mh2HFT1PtCent;
+  TH2D* mh2HFT1PhiVz;
+  // TH2D* mh2Tpc1PtCentPartEtaVzPhi[m_nParticles][m_nEtasRatio][m_nVzsRatio][m_nPhisRatio];
   // TH2F* mh2HFT1PtCentPartEtaVzPhi[m_nParticles][m_nEtasRatio][m_nVzsRatio][m_nPhisRatio];
 
   //HFT Dca

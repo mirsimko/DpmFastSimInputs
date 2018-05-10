@@ -130,6 +130,8 @@ int StPicoLcAnaMaker::createQA(){
     //float hBeta = mHFCuts->getTofBetaBase(trk); //SL16d
     float hBeta = mHFCuts->getTofBetaBase(trk); //SL16j, Vanek
     bool hTofAvailable = !isnan(hBeta) && hBeta > 0;
+    // if(hTofAvailable)
+    //   continue; // for the TOF check
 
     bool tofPion = false, tofKaon = false, tofProton = false;
     if(mHFCuts->isTOFHadron(trk, hBeta, StHFCuts::kPion, mPrimVtx))
@@ -242,18 +244,18 @@ void StPicoLcAnaMaker::histoInit(TString fileBaseName, bool fillQaHists){
   mh2CentVzWg = new TH2F("mh2CentVzWg", "CentralityVsVzWg;cent;Vz", 10, -1.5, 8.5, 200, -10, 10);
 
   //Add some HFT ratio plots
-  mh2Tpc1PtCent  = new TH2F("mh2Tpc1PtCent", "Tpc tacks;p_{T}(GeV/c);cent", 120, 0, 12, 10, -1.5, 8.5); //Dca 1.5cm
-  mh2HFT1PtCent  = new TH2F("mh2HFT1PtCent", "HFT tacks;p_{T}(GeV/c);cent", 120, 0, 12, 10, -1.5, 8.5); //Dca 1.5cm
-  mh2Tpc1PhiVz  = new TH2F("mh2Tpc1PhiVz", "Tpc tacks;#Phi;Vz", 100, -3.1415, 3.1415, 20, -10, 10); //Dca 1.5cm
-  mh2HFT1PhiVz  = new TH2F("mh2HFT1PhiVz", "HFT tacks;#Phi;Vz", 100, -3.1415, 3.1415, 20, -10, 10); //Dca 1.5cm
+  mh2Tpc1PtCent  = new TH2D("mh2Tpc1PtCent", "Tpc tacks;p_{T}(GeV/c);cent", 120, 0, 12, 10, -1.5, 8.5); //Dca 1.5cm
+  mh2HFT1PtCent  = new TH2D("mh2HFT1PtCent", "HFT tacks;p_{T}(GeV/c);cent", 120, 0, 12, 10, -1.5, 8.5); //Dca 1.5cm
+  mh2Tpc1PhiVz  = new TH2D("mh2Tpc1PhiVz", "Tpc tacks;#Phi;Vz", 100, -3.1415, 3.1415, 20, -10, 10); //Dca 1.5cm
+  mh2HFT1PhiVz  = new TH2D("mh2HFT1PhiVz", "HFT tacks;#Phi;Vz", 100, -3.1415, 3.1415, 20, -10, 10); //Dca 1.5cm
 
   for (int iParticle = 0; iParticle < m_nParticles; ++iParticle){
     mh1Tpc1Pt[iParticle] = new TH1D(Form("mh1Tpc1Pt_%d", iParticle), "mh1Tpc1Pt_" + m_ParticleName[iParticle], 120, 0, 12);
     mh1HFT1Pt[iParticle] = new TH1D(Form("mh1HFT1Pt_%d", iParticle), "mh1HFT1Pt_" + m_ParticleName[iParticle], 120, 0, 12);
-    mh2TOF1PtCent[iParticle] = new TH2F(Form("mh2TOF1PtCent_%d", iParticle), "mh2TOF1PtCent_" + m_ParticleName[iParticle], 120, 0, 12, 10, -1.5, 8.5);
-    mh2TOF1HFTPtCent[iParticle] = new TH2F(Form("mh2TOF1HFTPtCent_%d", iParticle), "mh2TOF1HFTPtCent_" + m_ParticleName[iParticle], 120, 0, 12, 10, -1.5, 8.5);
-    mh2HFT1PtCentParticles[iParticle] = new TH2F(Form("mh2HFT1PtCentParticles_%d", iParticle), "mh2HFT1PtCentParticles_" + m_ParticleName[iParticle], 120, 0, 12, 10, -1.5, 8.5);
-    mh2Tpc1PtCentParticles[iParticle] = new TH2F(Form("mh2Tpc1PtCentParticles_%d", iParticle), "mh2Tpc1PtCentParticles_" + m_ParticleName[iParticle], 120, 0, 12, 10, -1.5, 8.5);
+    mh2TOF1PtCent[iParticle] = new TH2D(Form("mh2TOF1PtCent_%d", iParticle), "mh2TOF1PtCent_" + m_ParticleName[iParticle], 120, 0, 12, 10, -1.5, 8.5);
+    mh2TOF1HFTPtCent[iParticle] = new TH2D(Form("mh2TOF1HFTPtCent_%d", iParticle), "mh2TOF1HFTPtCent_" + m_ParticleName[iParticle], 120, 0, 12, 10, -1.5, 8.5);
+    mh2HFT1PtCentParticles[iParticle] = new TH2D(Form("mh2HFT1PtCentParticles_%d", iParticle), "mh2HFT1PtCentParticles_" + m_ParticleName[iParticle], 120, 0, 12, 10, -1.5, 8.5);
+    mh2Tpc1PtCentParticles[iParticle] = new TH2D(Form("mh2Tpc1PtCentParticles_%d", iParticle), "mh2Tpc1PtCentParticles_" + m_ParticleName[iParticle], 120, 0, 12, 10, -1.5, 8.5);
 
     // for (int iEta = 0; iEta < m_nEtasRatio; ++iEta){
     //   for (int iVz = 0; iVz < m_nVzsRatio; ++iVz){
