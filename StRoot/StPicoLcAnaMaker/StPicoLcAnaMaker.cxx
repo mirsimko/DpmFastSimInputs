@@ -131,9 +131,18 @@ int StPicoLcAnaMaker::createQA(){
     float hBeta = mHFCuts->getTofBetaBase(trk); //SL16j, Vanek
     bool hTofAvailable = !isnan(hBeta) && hBeta > 0;
 
-    bool goodPion = tpcPion; //do not want TOF for HFT matching and resolution determination
-    bool goodKaon = tpcKaon;
-    bool goodProton = tpcProton;
+
+    bool tofPion = false, tofKaon = false, tofProton = false;
+    if(mHFCuts->isTOFHadron(trk, hBeta, StHFCuts::kPion, mPrimVtx))
+      tofPion = true;
+    if(mHFCuts->isTOFHadron(trk, hBeta, StHFCuts::kKaon, mPrimVtx))
+      tofKaon = true;
+    if(mHFCuts->isTOFHadron(trk, hBeta, StHFCuts::kProton, mPrimVtx))
+      tofProton = true;
+
+    bool goodPion = tpcPion && tofPion; //do not want TOF for HFT matching and resolution determination
+    bool goodKaon = tpcKaon && tofKaon;
+    bool goodProton = tpcProton && tofProton;
 
     if (trk  && fabs(dca) < mHFCuts->cutDca() && trk->isHFTTrack() && (goodPion || goodKaon || goodProton)){
       addDcaPtCent(dca, dcaXy, dcaZ, goodPion, goodKaon, goodProton, momentum.perp(), centrality, momentum.pseudoRapidity(), momentum.phi(), mPrimVtx.z()); //add Dca distribution
