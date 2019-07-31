@@ -168,13 +168,13 @@ void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *output
   hfCuts->addTriggerId(450025);    // vpdmb-5-p-nobsmd
 */
 	//SL16j triggers
-  hfCuts->addTriggerId(520802);    // VPDMB-5-p-hlt
-  hfCuts->addTriggerId(520812);    // VPDMB-5-p-hlt
-  hfCuts->addTriggerId(520822);    // VPDMB-5-p-hlt
-  hfCuts->addTriggerId(520832);    // VPDMB-5-p-hlt
-  hfCuts->addTriggerId(520842);    // VPDMB-5-p-hlt
+  // hfCuts->addTriggerId(520802);    // VPDMB-5-p-hlt
+  // hfCuts->addTriggerId(520812);    // VPDMB-5-p-hlt
+  // hfCuts->addTriggerId(520822);    // VPDMB-5-p-hlt
+  // hfCuts->addTriggerId(520832);    // VPDMB-5-p-hlt
+  // hfCuts->addTriggerId(520842);    // VPDMB-5-p-hlt
 
-	hfCuts->addTriggerId(520001);    // VPDMB-5-p-sst
+  hfCuts->addTriggerId(520001);    // VPDMB-5-p-sst
   hfCuts->addTriggerId(520011);    // VPDMB-5-p-sst
   hfCuts->addTriggerId(520021);    // VPDMB-5-p-sst
   hfCuts->addTriggerId(520031);    // VPDMB-5-p-sst
@@ -182,16 +182,16 @@ void runPicoLcAnaMaker(const Char_t *inputFile="test.list", const Char_t *output
   hfCuts->addTriggerId(520051);    // VPDMB-5-p-sst
 
   hfCuts->setCutNHitsFitMin(15); //kvapil 20 to 15, for candidates
-	hfCuts->setCutNHitsFitMinHist(20); //for histograms, Vanek
+  hfCuts->setCutNHitsFitMinHist(20); //for histograms, Vanek
   hfCuts->setCutRequireHFT(true);
 
-	hfCuts->setCutDca(1.5); //for QA, see createQA() in StPicoLcAnaMaker.cxx
-	hfCuts->setCutDcaXy(1.); //used in Kvapil's version, not used in Vanek's version
-	hfCuts->setCutDcaZ(1.);
+  hfCuts->setCutDca(1.5); //for QA, see createQA() in StPicoLcAnaMaker.cxx
+  hfCuts->setCutDcaXy(1.); //used in Kvapil's version, not used in Vanek's version
+  hfCuts->setCutDcaZ(1.);
 
-  hfCuts->setCutDcaMin(0.009,StHFCuts::kPion); //federic 1aug2016
-  //hfCuts->setCutDcaMin(0.01,StHFCuts::kKaon); //federic 1aug2016
-  hfCuts->setCutDcaMin(0.007,StHFCuts::kKaon); //federic 3aug2016
+  // hfCuts->setCutDcaMin(0.009,StHFCuts::kPion); //federic 1aug2016
+  // hfCuts->setCutDcaMin(0.01,StHFCuts::kKaon); //federic 1aug2016
+  // hfCuts->setCutDcaMin(0.007,StHFCuts::kKaon); //federic 3aug2016
 
   hfCuts->setCutNHitsFitnHitsMax(0.52);
 
